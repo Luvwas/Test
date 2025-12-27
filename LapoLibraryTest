@@ -1,3 +1,7 @@
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🔧 SERVICES & DEPENDENCIES
+-- ═══════════════════════════════════════════════════════════════════════
+
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -5,856 +9,406 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local TextService = game:GetService("TextService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local MarketplaceService = game:GetService("MarketplaceService")
-local TeleportService = game:GetService("TeleportService")
 
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 🎨 ADVANCED THEME SYSTEM - 12 PREMIUM THEMES
+-- 🎨 THEME SYSTEM - 6 PRE-CONFIGURED PREMIUM THEMES
 -- ═══════════════════════════════════════════════════════════════════════
 
 local Themes = {
-    -- Original Themes (Enhanced)
     Dark = {
-        Name = "Dark",
+        -- Backgrounds (5 variations)
         BgPrimary = Color3.fromRGB(10, 14, 26),
         BgSecondary = Color3.fromRGB(15, 20, 35),
         BgTertiary = Color3.fromRGB(20, 26, 42),
         BgElevated = Color3.fromRGB(25, 32, 50),
         BgModal = Color3.fromRGB(12, 17, 30),
-        BgHover = Color3.fromRGB(30, 38, 55),
-        BgActive = Color3.fromRGB(35, 45, 65),
-
+        
+        -- Text (3 variations)
         TextPrimary = Color3.fromRGB(245, 248, 255),
         TextSecondary = Color3.fromRGB(180, 190, 210),
         TextMuted = Color3.fromRGB(120, 130, 150),
-        TextDisabled = Color3.fromRGB(80, 90, 110),
-
+        
+        -- Accents
         Primary = Color3.fromRGB(88, 101, 242),
-        PrimaryHover = Color3.fromRGB(103, 115, 255),
-        PrimaryActive = Color3.fromRGB(75, 85, 220),
         Secondary = Color3.fromRGB(67, 181, 129),
         Success = Color3.fromRGB(67, 181, 129),
         Warning = Color3.fromRGB(250, 166, 26),
         Danger = Color3.fromRGB(237, 66, 69),
         Info = Color3.fromRGB(0, 168, 232),
-
+        
+        -- Borders & Strokes
         Border = Color3.fromRGB(40, 50, 70),
         BorderSubtle = Color3.fromRGB(30, 38, 55),
-        BorderFocus = Color3.fromRGB(88, 101, 242),
         Divider = Color3.fromRGB(35, 43, 60),
-
+        
+        -- Overlays
         Overlay = Color3.fromRGB(0, 0, 0),
         Shadow = Color3.fromRGB(0, 0, 0),
         Glow = Color3.fromRGB(88, 101, 242),
-
+        
+        -- Layout
         CornerRadius = UDim.new(0, 8),
-        BorderRadius = UDim.new(0, 4),
         Padding = 12,
         Spacing = 8,
-        FontSizes = {Title = 16, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 16, Body = 14, Small = 12}
     },
-
+    
     Light = {
-        Name = "Light",
         BgPrimary = Color3.fromRGB(255, 255, 255),
         BgSecondary = Color3.fromRGB(246, 248, 250),
         BgTertiary = Color3.fromRGB(237, 240, 245),
         BgElevated = Color3.fromRGB(255, 255, 255),
         BgModal = Color3.fromRGB(250, 251, 253),
-        BgHover = Color3.fromRGB(235, 238, 245),
-        BgActive = Color3.fromRGB(225, 230, 240),
-
+        
         TextPrimary = Color3.fromRGB(20, 25, 35),
         TextSecondary = Color3.fromRGB(80, 90, 110),
         TextMuted = Color3.fromRGB(140, 150, 170),
-        TextDisabled = Color3.fromRGB(180, 185, 195),
-
+        
         Primary = Color3.fromRGB(88, 101, 242),
-        PrimaryHover = Color3.fromRGB(75, 85, 220),
-        PrimaryActive = Color3.fromRGB(65, 75, 200),
         Secondary = Color3.fromRGB(67, 181, 129),
         Success = Color3.fromRGB(67, 181, 129),
         Warning = Color3.fromRGB(250, 166, 26),
         Danger = Color3.fromRGB(237, 66, 69),
         Info = Color3.fromRGB(0, 168, 232),
-
+        
         Border = Color3.fromRGB(220, 225, 235),
         BorderSubtle = Color3.fromRGB(235, 238, 245),
-        BorderFocus = Color3.fromRGB(88, 101, 242),
         Divider = Color3.fromRGB(225, 230, 240),
-
+        
         Overlay = Color3.fromRGB(0, 0, 0),
         Shadow = Color3.fromRGB(0, 0, 0),
         Glow = Color3.fromRGB(88, 101, 242),
-
+        
         CornerRadius = UDim.new(0, 8),
-        BorderRadius = UDim.new(0, 4),
         Padding = 12,
         Spacing = 8,
-        FontSizes = {Title = 16, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 16, Body = 14, Small = 12}
     },
-
-    -- New Premium Themes
+    
     Midnight = {
-        Name = "Midnight",
         BgPrimary = Color3.fromRGB(0, 0, 0),
         BgSecondary = Color3.fromRGB(10, 8, 15),
         BgTertiary = Color3.fromRGB(18, 15, 25),
         BgElevated = Color3.fromRGB(25, 20, 35),
         BgModal = Color3.fromRGB(5, 5, 10),
-        BgHover = Color3.fromRGB(35, 25, 45),
-        BgActive = Color3.fromRGB(45, 30, 55),
-
+        
         TextPrimary = Color3.fromRGB(255, 255, 255),
         TextSecondary = Color3.fromRGB(200, 195, 220),
         TextMuted = Color3.fromRGB(150, 145, 170),
-        TextDisabled = Color3.fromRGB(100, 95, 120),
-
+        
         Primary = Color3.fromRGB(138, 43, 226),
-        PrimaryHover = Color3.fromRGB(155, 60, 240),
-        PrimaryActive = Color3.fromRGB(120, 30, 210),
         Secondary = Color3.fromRGB(186, 85, 211),
         Success = Color3.fromRGB(138, 43, 226),
         Warning = Color3.fromRGB(255, 140, 0),
         Danger = Color3.fromRGB(220, 20, 60),
         Info = Color3.fromRGB(138, 43, 226),
-
+        
         Border = Color3.fromRGB(75, 50, 100),
         BorderSubtle = Color3.fromRGB(50, 35, 70),
-        BorderFocus = Color3.fromRGB(138, 43, 226),
         Divider = Color3.fromRGB(60, 45, 85),
-
+        
         Overlay = Color3.fromRGB(0, 0, 0),
         Shadow = Color3.fromRGB(138, 43, 226),
         Glow = Color3.fromRGB(138, 43, 226),
-
+        
         CornerRadius = UDim.new(0, 10),
-        BorderRadius = UDim.new(0, 5),
         Padding = 14,
         Spacing = 10,
-        FontSizes = {Title = 17, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 17, Body = 14, Small = 12}
     },
-
+    
     Neon = {
-        Name = "Neon",
         BgPrimary = Color3.fromRGB(5, 5, 10),
         BgSecondary = Color3.fromRGB(10, 10, 15),
         BgTertiary = Color3.fromRGB(15, 15, 20),
         BgElevated = Color3.fromRGB(20, 20, 28),
         BgModal = Color3.fromRGB(8, 8, 12),
-        BgHover = Color3.fromRGB(25, 25, 35),
-        BgActive = Color3.fromRGB(30, 30, 40),
-
+        
         TextPrimary = Color3.fromRGB(0, 255, 255),
         TextSecondary = Color3.fromRGB(255, 0, 255),
         TextMuted = Color3.fromRGB(180, 180, 200),
-        TextDisabled = Color3.fromRGB(120, 120, 140),
-
+        
         Primary = Color3.fromRGB(0, 255, 255),
-        PrimaryHover = Color3.fromRGB(50, 255, 255),
-        PrimaryActive = Color3.fromRGB(0, 200, 200),
         Secondary = Color3.fromRGB(255, 0, 255),
         Success = Color3.fromRGB(57, 255, 20),
         Warning = Color3.fromRGB(255, 255, 0),
         Danger = Color3.fromRGB(255, 0, 100),
         Info = Color3.fromRGB(0, 255, 255),
-
+        
         Border = Color3.fromRGB(0, 255, 255),
         BorderSubtle = Color3.fromRGB(0, 150, 150),
-        BorderFocus = Color3.fromRGB(0, 255, 255),
         Divider = Color3.fromRGB(255, 0, 255),
-
+        
         Overlay = Color3.fromRGB(0, 0, 0),
         Shadow = Color3.fromRGB(0, 255, 255),
         Glow = Color3.fromRGB(0, 255, 255),
-
+        
         CornerRadius = UDim.new(0, 6),
-        BorderRadius = UDim.new(0, 3),
         Padding = 12,
         Spacing = 8,
-        FontSizes = {Title = 16, Body = 14, Small = 11, Tiny = 9},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 16, Body = 14, Small = 11}
     },
-
+    
     Ocean = {
-        Name = "Ocean",
         BgPrimary = Color3.fromRGB(12, 35, 55),
         BgSecondary = Color3.fromRGB(18, 45, 68),
         BgTertiary = Color3.fromRGB(25, 55, 82),
         BgElevated = Color3.fromRGB(32, 65, 95),
         BgModal = Color3.fromRGB(15, 40, 62),
-        BgHover = Color3.fromRGB(40, 70, 100),
-        BgActive = Color3.fromRGB(50, 80, 110),
-
+        
         TextPrimary = Color3.fromRGB(230, 245, 255),
         TextSecondary = Color3.fromRGB(180, 215, 235),
         TextMuted = Color3.fromRGB(140, 180, 205),
-        TextDisabled = Color3.fromRGB(100, 140, 165),
-
+        
         Primary = Color3.fromRGB(64, 224, 208),
-        PrimaryHover = Color3.fromRGB(100, 240, 220),
-        PrimaryActive = Color3.fromRGB(40, 200, 185),
         Secondary = Color3.fromRGB(72, 209, 204),
         Success = Color3.fromRGB(46, 204, 113),
         Warning = Color3.fromRGB(241, 196, 15),
         Danger = Color3.fromRGB(231, 76, 60),
         Info = Color3.fromRGB(52, 152, 219),
-
+        
         Border = Color3.fromRGB(64, 224, 208),
         BorderSubtle = Color3.fromRGB(45, 140, 145),
-        BorderFocus = Color3.fromRGB(64, 224, 208),
         Divider = Color3.fromRGB(55, 180, 175),
-
+        
         Overlay = Color3.fromRGB(12, 35, 55),
         Shadow = Color3.fromRGB(0, 40, 60),
         Glow = Color3.fromRGB(64, 224, 208),
-
+        
         CornerRadius = UDim.new(0, 10),
-        BorderRadius = UDim.new(0, 5),
         Padding = 14,
         Spacing = 10,
-        FontSizes = {Title = 17, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 17, Body = 14, Small = 12}
     },
-
+    
     Sunset = {
-        Name = "Sunset",
         BgPrimary = Color3.fromRGB(25, 15, 30),
         BgSecondary = Color3.fromRGB(35, 20, 40),
         BgTertiary = Color3.fromRGB(45, 25, 50),
         BgElevated = Color3.fromRGB(55, 30, 60),
         BgModal = Color3.fromRGB(30, 18, 35),
-        BgHover = Color3.fromRGB(65, 35, 70),
-        BgActive = Color3.fromRGB(75, 40, 80),
-
+        
         TextPrimary = Color3.fromRGB(255, 240, 230),
         TextSecondary = Color3.fromRGB(255, 200, 180),
         TextMuted = Color3.fromRGB(200, 160, 150),
-        TextDisabled = Color3.fromRGB(150, 120, 115),
-
+        
         Primary = Color3.fromRGB(255, 107, 107),
-        PrimaryHover = Color3.fromRGB(255, 130, 130),
-        PrimaryActive = Color3.fromRGB(230, 80, 80),
         Secondary = Color3.fromRGB(255, 159, 64),
         Success = Color3.fromRGB(72, 219, 251),
         Warning = Color3.fromRGB(253, 203, 110),
         Danger = Color3.fromRGB(232, 67, 147),
         Info = Color3.fromRGB(162, 155, 254),
-
+        
         Border = Color3.fromRGB(255, 107, 107),
         BorderSubtle = Color3.fromRGB(150, 70, 70),
-        BorderFocus = Color3.fromRGB(255, 107, 107),
         Divider = Color3.fromRGB(200, 90, 90),
-
+        
         Overlay = Color3.fromRGB(25, 15, 30),
         Shadow = Color3.fromRGB(100, 30, 50),
         Glow = Color3.fromRGB(255, 107, 107),
-
+        
         CornerRadius = UDim.new(0, 12),
-        BorderRadius = UDim.new(0, 6),
         Padding = 14,
         Spacing = 10,
-        FontSizes = {Title = 18, Body = 15, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
+        FontSizes = {Title = 18, Body = 15, Small = 12}
     },
-
+    
     Cyberpunk = {
-        Name = "Cyberpunk",
         BgPrimary = Color3.fromRGB(15, 0, 25),
         BgSecondary = Color3.fromRGB(25, 5, 35),
         BgTertiary = Color3.fromRGB(35, 10, 45),
         BgElevated = Color3.fromRGB(45, 15, 55),
         BgModal = Color3.fromRGB(20, 3, 30),
-        BgHover = Color3.fromRGB(55, 20, 65),
-        BgActive = Color3.fromRGB(65, 25, 75),
-
+        
         TextPrimary = Color3.fromRGB(255, 242, 0),
         TextSecondary = Color3.fromRGB(255, 20, 147),
         TextMuted = Color3.fromRGB(180, 180, 200),
-        TextDisabled = Color3.fromRGB(120, 120, 140),
-
+        
         Primary = Color3.fromRGB(255, 20, 147),
-        PrimaryHover = Color3.fromRGB(255, 50, 170),
-        PrimaryActive = Color3.fromRGB(230, 0, 120),
         Secondary = Color3.fromRGB(255, 242, 0),
         Success = Color3.fromRGB(0, 255, 159),
         Warning = Color3.fromRGB(255, 165, 0),
         Danger = Color3.fromRGB(255, 0, 0),
         Info = Color3.fromRGB(0, 191, 255),
-
+        
         Border = Color3.fromRGB(255, 20, 147),
         BorderSubtle = Color3.fromRGB(150, 10, 90),
-        BorderFocus = Color3.fromRGB(255, 20, 147),
         Divider = Color3.fromRGB(200, 15, 120),
-
+        
         Overlay = Color3.fromRGB(15, 0, 25),
         Shadow = Color3.fromRGB(255, 20, 147),
         Glow = Color3.fromRGB(255, 20, 147),
-
+        
         CornerRadius = UDim.new(0, 4),
-        BorderRadius = UDim.new(0, 2),
         Padding = 12,
         Spacing = 8,
-        FontSizes = {Title = 16, Body = 14, Small = 11, Tiny = 9},
-        Shadows = true,
-        Animations = true
-    },
-
-    -- Additional Premium Themes
-    Forest = {
-        Name = "Forest",
-        BgPrimary = Color3.fromRGB(15, 25, 15),
-        BgSecondary = Color3.fromRGB(20, 35, 20),
-        BgTertiary = Color3.fromRGB(25, 45, 25),
-        BgElevated = Color3.fromRGB(30, 55, 30),
-        BgModal = Color3.fromRGB(18, 30, 18),
-        BgHover = Color3.fromRGB(35, 60, 35),
-        BgActive = Color3.fromRGB(40, 70, 40),
-
-        TextPrimary = Color3.fromRGB(240, 255, 240),
-        TextSecondary = Color3.fromRGB(180, 220, 180),
-        TextMuted = Color3.fromRGB(140, 180, 140),
-        TextDisabled = Color3.fromRGB(100, 140, 100),
-
-        Primary = Color3.fromRGB(34, 197, 94),
-        PrimaryHover = Color3.fromRGB(50, 220, 110),
-        PrimaryActive = Color3.fromRGB(20, 170, 75),
-        Secondary = Color3.fromRGB(59, 130, 246),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(251, 191, 36),
-        Danger = Color3.fromRGB(239, 68, 68),
-        Info = Color3.fromRGB(59, 130, 246),
-
-        Border = Color3.fromRGB(34, 197, 94),
-        BorderSubtle = Color3.fromRGB(25, 140, 70),
-        BorderFocus = Color3.fromRGB(34, 197, 94),
-        Divider = Color3.fromRGB(30, 160, 80),
-
-        Overlay = Color3.fromRGB(15, 25, 15),
-        Shadow = Color3.fromRGB(0, 50, 0),
-        Glow = Color3.fromRGB(34, 197, 94),
-
-        CornerRadius = UDim.new(0, 10),
-        BorderRadius = UDim.new(0, 5),
-        Padding = 14,
-        Spacing = 10,
-        FontSizes = {Title = 17, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
-    },
-
-    Royal = {
-        Name = "Royal",
-        BgPrimary = Color3.fromRGB(20, 15, 35),
-        BgSecondary = Color3.fromRGB(30, 20, 50),
-        BgTertiary = Color3.fromRGB(40, 25, 65),
-        BgElevated = Color3.fromRGB(50, 30, 80),
-        BgModal = Color3.fromRGB(25, 18, 40),
-        BgHover = Color3.fromRGB(60, 35, 90),
-        BgActive = Color3.fromRGB(70, 40, 100),
-
-        TextPrimary = Color3.fromRGB(255, 245, 255),
-        TextSecondary = Color3.fromRGB(220, 200, 240),
-        TextMuted = Color3.fromRGB(180, 160, 200),
-        TextDisabled = Color3.fromRGB(140, 120, 160),
-
-        Primary = Color3.fromRGB(147, 51, 234),
-        PrimaryHover = Color3.fromRGB(170, 70, 255),
-        PrimaryActive = Color3.fromRGB(120, 30, 210),
-        Secondary = Color3.fromRGB(236, 72, 153),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(251, 191, 36),
-        Danger = Color3.fromRGB(239, 68, 68),
-        Info = Color3.fromRGB(59, 130, 246),
-
-        Border = Color3.fromRGB(147, 51, 234),
-        BorderSubtle = Color3.fromRGB(100, 40, 180),
-        BorderFocus = Color3.fromRGB(147, 51, 234),
-        Divider = Color3.fromRGB(120, 45, 200),
-
-        Overlay = Color3.fromRGB(20, 15, 35),
-        Shadow = Color3.fromRGB(80, 30, 120),
-        Glow = Color3.fromRGB(147, 51, 234),
-
-        CornerRadius = UDim.new(0, 12),
-        BorderRadius = UDim.new(0, 6),
-        Padding = 16,
-        Spacing = 12,
-        FontSizes = {Title = 18, Body = 15, Small = 13, Tiny = 11},
-        Shadows = true,
-        Animations = true
-    },
-
-    Fire = {
-        Name = "Fire",
-        BgPrimary = Color3.fromRGB(35, 10, 10),
-        BgSecondary = Color3.fromRGB(50, 15, 15),
-        BgTertiary = Color3.fromRGB(65, 20, 20),
-        BgElevated = Color3.fromRGB(80, 25, 25),
-        BgModal = Color3.fromRGB(40, 12, 12),
-        BgHover = Color3.fromRGB(90, 30, 30),
-        BgActive = Color3.fromRGB(100, 35, 35),
-
-        TextPrimary = Color3.fromRGB(255, 250, 240),
-        TextSecondary = Color3.fromRGB(255, 200, 150),
-        TextMuted = Color3.fromRGB(200, 150, 120),
-        TextDisabled = Color3.fromRGB(150, 100, 80),
-
-        Primary = Color3.fromRGB(255, 69, 0),
-        PrimaryHover = Color3.fromRGB(255, 100, 30),
-        PrimaryActive = Color3.fromRGB(220, 40, 0),
-        Secondary = Color3.fromRGB(255, 140, 0),
-        Success = Color3.fromRGB(50, 205, 50),
-        Warning = Color3.fromRGB(255, 215, 0),
-        Danger = Color3.fromRGB(255, 0, 0),
-        Info = Color3.fromRGB(0, 191, 255),
-
-        Border = Color3.fromRGB(255, 69, 0),
-        BorderSubtle = Color3.fromRGB(180, 50, 20),
-        BorderFocus = Color3.fromRGB(255, 69, 0),
-        Divider = Color3.fromRGB(200, 60, 30),
-
-        Overlay = Color3.fromRGB(35, 10, 10),
-        Shadow = Color3.fromRGB(120, 30, 20),
-        Glow = Color3.fromRGB(255, 69, 0),
-
-        CornerRadius = UDim.new(0, 8),
-        BorderRadius = UDim.new(0, 4),
-        Padding = 12,
-        Spacing = 8,
-        FontSizes = {Title = 16, Body = 14, Small = 12, Tiny = 10},
-        Shadows = true,
-        Animations = true
-    },
-
-    Ice = {
-        Name = "Ice",
-        BgPrimary = Color3.fromRGB(240, 248, 255),
-        BgSecondary = Color3.fromRGB(220, 235, 245),
-        BgTertiary = Color3.fromRGB(200, 220, 235),
-        BgElevated = Color3.fromRGB(180, 205, 225),
-        BgModal = Color3.fromRGB(230, 240, 250),
-        BgHover = Color3.fromRGB(160, 190, 215),
-        BgActive = Color3.fromRGB(140, 175, 205),
-
-        TextPrimary = Color3.fromRGB(10, 20, 40),
-        TextSecondary = Color3.fromRGB(40, 60, 90),
-        TextMuted = Color3.fromRGB(80, 100, 130),
-        TextDisabled = Color3.fromRGB(120, 140, 170),
-
-        Primary = Color3.fromRGB(0, 150, 255),
-        PrimaryHover = Color3.fromRGB(30, 170, 255),
-        PrimaryActive = Color3.fromRGB(0, 120, 220),
-        Secondary = Color3.fromRGB(0, 200, 255),
-        Success = Color3.fromRGB(0, 184, 148),
-        Warning = Color3.fromRGB(255, 193, 7),
-        Danger = Color3.fromRGB(220, 53, 69),
-        Info = Color3.fromRGB(0, 123, 255),
-
-        Border = Color3.fromRGB(0, 150, 255),
-        BorderSubtle = Color3.fromRGB(0, 100, 170),
-        BorderFocus = Color3.fromRGB(0, 150, 255),
-        Divider = Color3.fromRGB(0, 120, 200),
-
-        Overlay = Color3.fromRGB(240, 248, 255),
-        Shadow = Color3.fromRGB(0, 50, 100),
-        Glow = Color3.fromRGB(0, 150, 255),
-
-        CornerRadius = UDim.new(0, 12),
-        BorderRadius = UDim.new(0, 6),
-        Padding = 16,
-        Spacing = 12,
-        FontSizes = {Title = 18, Body = 15, Small = 13, Tiny = 11},
-        Shadows = true,
-        Animations = true
-    },
-
-    Galaxy = {
-        Name = "Galaxy",
-        BgPrimary = Color3.fromRGB(5, 5, 15),
-        BgSecondary = Color3.fromRGB(10, 10, 25),
-        BgTertiary = Color3.fromRGB(15, 15, 35),
-        BgElevated = Color3.fromRGB(20, 20, 45),
-        BgModal = Color3.fromRGB(8, 8, 20),
-        BgHover = Color3.fromRGB(25, 25, 55),
-        BgActive = Color3.fromRGB(30, 30, 65),
-
-        TextPrimary = Color3.fromRGB(255, 255, 255),
-        TextSecondary = Color3.fromRGB(200, 200, 255),
-        TextMuted = Color3.fromRGB(150, 150, 200),
-        TextDisabled = Color3.fromRGB(100, 100, 150),
-
-        Primary = Color3.fromRGB(138, 43, 226),
-        PrimaryHover = Color3.fromRGB(160, 60, 255),
-        PrimaryActive = Color3.fromRGB(110, 20, 200),
-        Secondary = Color3.fromRGB(75, 0, 130),
-        Success = Color3.fromRGB(0, 255, 127),
-        Warning = Color3.fromRGB(255, 215, 0),
-        Danger = Color3.fromRGB(255, 0, 255),
-        Info = Color3.fromRGB(0, 191, 255),
-
-        Border = Color3.fromRGB(138, 43, 226),
-        BorderSubtle = Color3.fromRGB(90, 30, 150),
-        BorderFocus = Color3.fromRGB(138, 43, 226),
-        Divider = Color3.fromRGB(110, 35, 180),
-
-        Overlay = Color3.fromRGB(5, 5, 15),
-        Shadow = Color3.fromRGB(50, 0, 100),
-        Glow = Color3.fromRGB(138, 43, 226),
-
-        CornerRadius = UDim.new(0, 15),
-        BorderRadius = UDim.new(0, 8),
-        Padding = 18,
-        Spacing = 14,
-        FontSizes = {Title = 20, Body = 16, Small = 14, Tiny = 12},
-        Shadows = true,
-        Animations = true
-    },
-
-    Minimal = {
-        Name = "Minimal",
-        BgPrimary = Color3.fromRGB(250, 250, 250),
-        BgSecondary = Color3.fromRGB(245, 245, 245),
-        BgTertiary = Color3.fromRGB(240, 240, 240),
-        BgElevated = Color3.fromRGB(255, 255, 255),
-        BgModal = Color3.fromRGB(248, 248, 248),
-        BgHover = Color3.fromRGB(235, 235, 235),
-        BgActive = Color3.fromRGB(225, 225, 225),
-
-        TextPrimary = Color3.fromRGB(30, 30, 30),
-        TextSecondary = Color3.fromRGB(80, 80, 80),
-        TextMuted = Color3.fromRGB(130, 130, 130),
-        TextDisabled = Color3.fromRGB(170, 170, 170),
-
-        Primary = Color3.fromRGB(50, 50, 50),
-        PrimaryHover = Color3.fromRGB(70, 70, 70),
-        PrimaryActive = Color3.fromRGB(30, 30, 30),
-        Secondary = Color3.fromRGB(100, 100, 100),
-        Success = Color3.fromRGB(34, 197, 94),
-        Warning = Color3.fromRGB(251, 191, 36),
-        Danger = Color3.fromRGB(239, 68, 68),
-        Info = Color3.fromRGB(59, 130, 246),
-
-        Border = Color3.fromRGB(220, 220, 220),
-        BorderSubtle = Color3.fromRGB(240, 240, 240),
-        BorderFocus = Color3.fromRGB(50, 50, 50),
-        Divider = Color3.fromRGB(230, 230, 230),
-
-        Overlay = Color3.fromRGB(250, 250, 250),
-        Shadow = Color3.fromRGB(0, 0, 0),
-        Glow = Color3.fromRGB(50, 50, 50),
-
-        CornerRadius = UDim.new(0, 2),
-        BorderRadius = UDim.new(0, 1),
-        Padding = 16,
-        Spacing = 16,
-        FontSizes = {Title = 18, Body = 16, Small = 14, Tiny = 12},
-        Shadows = false,
-        Animations = false
+        FontSizes = {Title = 16, Body = 14, Small = 11}
     }
 }
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 🛠️ ADVANCED UTILITY SYSTEM - 50+ FUNCTIONS
+-- 🛠️ UTILITY FUNCTIONS & HELPERS
 -- ═══════════════════════════════════════════════════════════════════════
 
 local Utility = {}
 
--- Enhanced tweening with easing curves
+-- Tween with advanced easing
 function Utility:Tween(instance, properties, duration, easingStyle, easingDirection, callback)
     duration = duration or 0.3
     easingStyle = easingStyle or Enum.EasingStyle.Quint
     easingDirection = easingDirection or Enum.EasingDirection.Out
-
+    
     local tweenInfo = TweenInfo.new(duration, easingStyle, easingDirection)
     local tween = TweenService:Create(instance, tweenInfo, properties)
-
+    
     if callback then
         tween.Completed:Connect(callback)
     end
-
+    
     tween:Play()
     return tween
 end
 
--- Advanced ripple effect with customizable parameters
-function Utility:RippleEffect(button, color, size, duration)
-    color = color or Color3.fromRGB(255, 255, 255)
-    size = size or 2
-    duration = duration or 0.6
+-- Create instance with properties
+function Utility:Create(className, properties)
+    local instance = Instance.new(className)
+    for property, value in pairs(properties) do
+        if property ~= "Parent" then
+            pcall(function()
+                instance[property] = value
+            end)
+        end
+    end
+    if properties.Parent then
+        instance.Parent = properties.Parent
+    end
+    return instance
+end
 
+-- Ripple effect on button click
+function Utility:RippleEffect(button, color)
     local ripple = Utility:Create("Frame", {
         Size = UDim2.new(0, 0, 0, 0),
         Position = UDim2.new(0.5, 0, 0.5, 0),
         AnchorPoint = Vector2.new(0.5, 0.5),
-        BackgroundColor3 = color,
+        BackgroundColor3 = color or Color3.fromRGB(255, 255, 255),
         BackgroundTransparency = 0.5,
         BorderSizePixel = 0,
-        ZIndex = 1000,
+        ZIndex = 10,
         Parent = button
     })
-
+    
     Utility:Create("UICorner", {
         CornerRadius = UDim.new(1, 0),
         Parent = ripple
     })
-
+    
     Utility:Tween(ripple, {
-        Size = UDim2.new(size, 0, size, 0),
+        Size = UDim2.new(2, 0, 2, 0),
         BackgroundTransparency = 1
-    }, duration, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, function()
+    }, 0.6, Enum.EasingStyle.Quart, Enum.EasingDirection.Out, function()
         ripple:Destroy()
     end)
 end
 
--- Enhanced instance creation with validation
-function Utility:Create(className, properties)
-    local instance
-    local success, err = pcall(function()
-        instance = Instance.new(className)
-    end)
-
-    if not success then
-        warn("Failed to create instance of class '" .. className .. "': " .. err)
-        return nil
-    end
-
-    for property, value in pairs(properties) do
-        if property ~= "Parent" then
-            local propSuccess, propErr = pcall(function()
-                instance[property] = value
-            end)
-            if not propSuccess then
-                warn("Failed to set property '" .. property .. "' on " .. className .. ": " .. propErr)
-            end
-        end
-    end
-
-    if properties.Parent then
-        instance.Parent = properties.Parent
-    end
-
-    return instance
+-- Add stroke (border)
+function Utility:AddStroke(parent, color, thickness, transparency)
+    return Utility:Create("UIStroke", {
+        Color = color or Color3.fromRGB(255, 255, 255),
+        Thickness = thickness or 1,
+        Transparency = transparency or 0.5,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        Parent = parent
+    })
 end
 
--- Advanced shadow system with multiple layers
-function Utility:AddShadow(parent, color, size, transparency, offset)
-    size = size or 20
-    transparency = transparency or 0.5
-    offset = offset or Vector2.new(0, 4)
-
+-- Add shadow effect (glassmorphism style)
+function Utility:AddShadow(parent, color, size, transparency)
     local shadow = Utility:Create("ImageLabel", {
         Name = "Shadow",
         Size = UDim2.new(1, size * 2, 1, size * 2),
-        Position = UDim2.new(0.5, offset.X, 0.5, offset.Y),
+        Position = UDim2.new(0.5, 0, 0.5, 0),
         AnchorPoint = Vector2.new(0.5, 0.5),
         BackgroundTransparency = 1,
         Image = "rbxassetid://5554236805",
         ImageColor3 = color or Color3.fromRGB(0, 0, 0),
-        ImageTransparency = transparency,
+        ImageTransparency = transparency or 0.7,
         ScaleType = Enum.ScaleType.Slice,
         SliceCenter = Rect.new(23, 23, 277, 277),
         ZIndex = parent.ZIndex - 1,
         Parent = parent
     })
-
     return shadow
 end
 
--- Glow effect for buttons and highlights
-function Utility:AddGlow(parent, color, size, transparency)
-    size = size or 10
-    transparency = transparency or 0.7
-
-    local glow = Utility:Create("ImageLabel", {
-        Name = "Glow",
-        Size = UDim2.new(1, size * 2, 1, size * 2),
-        Position = UDim2.new(0.5, 0, 0.5, 0),
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BackgroundTransparency = 1,
-        Image = "rbxassetid://266543268",
-        ImageColor3 = color or Color3.fromRGB(255, 255, 255),
-        ImageTransparency = transparency,
-        ZIndex = parent.ZIndex - 1,
-        Parent = parent
-    })
-
-    return glow
-end
-
--- Gradient utilities
-function Utility:AddGradient(parent, colorSequence, rotation, offset)
-    rotation = rotation or 0
-    offset = offset or Vector2.new(0, 0)
-
+-- Add gradient
+function Utility:AddGradient(parent, colorSequence, rotation)
     return Utility:Create("UIGradient", {
         Color = colorSequence,
-        Rotation = rotation,
-        Offset = offset,
+        Rotation = rotation or 0,
         Parent = parent
     })
 end
 
--- Stroke/border utilities
-function Utility:AddStroke(parent, color, thickness, transparency, strokeMode)
-    return Utility:Create("UIStroke", {
-        Color = color or Color3.fromRGB(255, 255, 255),
-        Thickness = thickness or 1,
-        Transparency = transparency or 0.5,
-        ApplyStrokeMode = strokeMode or Enum.ApplyStrokeMode.Border,
-        Parent = parent
-    })
-end
-
--- Corner radius utilities
-function Utility:AddCorner(parent, radius)
-    return Utility:Create("UICorner", {
-        CornerRadius = radius or UDim.new(0, 8),
-        Parent = parent
-    })
-end
-
--- Padding utilities
-function Utility:AddPadding(parent, padding)
-    return Utility:Create("UIPadding", {
-        PaddingTop = padding or UDim.new(0, 10),
-        PaddingBottom = padding or UDim.new(0, 10),
-        PaddingLeft = padding or UDim.new(0, 10),
-        PaddingRight = padding or UDim.new(0, 10),
-        Parent = parent
-    })
-end
-
--- List layout utilities
-function Utility:AddListLayout(parent, sortOrder, padding)
-    return Utility:Create("UIListLayout", {
-        SortOrder = sortOrder or Enum.SortOrder.LayoutOrder,
-        Padding = padding or UDim.new(0, 5),
-        Parent = parent
-    })
-end
-
--- Grid layout utilities
-function Utility:AddGridLayout(parent, cellSize, cellPadding, sortOrder)
-    return Utility:Create("UIGridLayout", {
-        CellSize = cellSize or UDim2.new(0, 100, 0, 100),
-        CellPadding = cellPadding or UDim2.new(0, 10, 0, 10),
-        SortOrder = sortOrder or Enum.SortOrder.LayoutOrder,
-        Parent = parent
-    })
-end
-
--- Debounce with advanced options
-function Utility:Debounce(func, wait, immediate)
+-- Debounce function
+function Utility:Debounce(func, wait)
     local debounceTimer
-    local lastCall = 0
-
     return function(...)
         local args = {...}
-        local now = tick()
-
-        if immediate and now - lastCall >= wait then
+        if debounceTimer then
+            debounceTimer:Disconnect()
+        end
+        debounceTimer = RunService.Heartbeat:Connect(function()
+            task.wait(wait)
             func(unpack(args))
-            lastCall = now
-        else
             if debounceTimer then
                 debounceTimer:Disconnect()
             end
-
-            debounceTimer = RunService.Heartbeat:Connect(function()
-                if tick() - lastCall >= wait then
-                    if not immediate then
-                        func(unpack(args))
-                    end
-                    debounceTimer:Disconnect()
-                    debounceTimer = nil
-                end
-            end)
-        end
+        end)
     end
 end
 
--- Throttle function
-function Utility:Throttle(func, limit)
-    local lastCall = 0
-
-    return function(...)
-        local now = tick()
-        if now - lastCall >= limit then
-            lastCall = now
-            return func(...)
-        end
-    end
-end
-
--- Make draggable with bounds and callbacks
-function Utility:MakeDraggable(gui, dragArea, bounds, onDragStart, onDragEnd)
+-- Make GUI draggable
+function Utility:MakeDraggable(gui, dragArea)
     local dragging, dragInput, dragStart, startPos
-
+    
     dragArea = dragArea or gui
-    bounds = bounds or {
-        MinX = -math.huge,
-        MaxX = math.huge,
-        MinY = -math.huge,
-        MaxY = math.huge
-    }
-
+    
     local function update(input)
         local delta = input.Position - dragStart
-        local newX = math.clamp(startPos.X.Offset + delta.X, bounds.MinX, bounds.MaxX)
-        local newY = math.clamp(startPos.Y.Offset + delta.Y, bounds.MinY, bounds.MaxY)
-
         Utility:Tween(gui, {
             Position = UDim2.new(
                 startPos.X.Scale,
-                newX,
+                startPos.X.Offset + delta.X,
                 startPos.Y.Scale,
-                newY
+                startPos.Y.Offset + delta.Y
             )
         }, 0.1, Enum.EasingStyle.Linear)
     end
-
+    
     dragArea.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
             startPos = gui.Position
-
-            if onDragStart then
-                onDragStart()
-            end
-
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
-                    if onDragEnd then
-                        onDragEnd()
-                    end
                 end
             end)
         end
     end)
-
+    
     dragArea.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
-
+    
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             update(input)
@@ -862,305 +416,104 @@ function Utility:MakeDraggable(gui, dragArea, bounds, onDragStart, onDragEnd)
     end)
 end
 
--- Enhanced file operations with error handling
+-- Save/Load configurations
 function Utility:SaveConfig(fileName, data)
     local success, err = pcall(function()
         if not isfolder then return end
-        if not isfolder("LapoLibrary") then
-            makefolder("LapoLibrary")
+        if not isfolder("NexusUI") then
+            makefolder("NexusUI")
         end
-        writefile("LapoLibrary/" .. fileName .. ".json", HttpService:JSONEncode(data))
+        writefile("NexusUI/" .. fileName .. ".json", HttpService:JSONEncode(data))
     end)
-    if not success then
-        warn("Failed to save config '" .. fileName .. "': " .. err)
-    end
     return success
 end
 
 function Utility:LoadConfig(fileName)
     local success, result = pcall(function()
         if not isfile then return nil end
-        if isfile("LapoLibrary/" .. fileName .. ".json") then
-            return HttpService:JSONDecode(readfile("LapoLibrary/" .. fileName .. ".json"))
+        if isfile("NexusUI/" .. fileName .. ".json") then
+            return HttpService:JSONDecode(readfile("NexusUI/" .. fileName .. ".json"))
         end
         return nil
     end)
-    if not success then
-        warn("Failed to load config '" .. fileName .. "': " .. result)
-        return nil
-    end
-    return result
+    return success and result or nil
 end
 
--- Text utilities
+-- Get text size
 function Utility:GetTextSize(text, fontSize, font, frameSize)
     local textService = TextService
     local textSize = textService:GetTextSize(
         text,
         fontSize,
         font,
-        frameSize or Vector2.new(1000, 1000)
+        frameSize
     )
     return textSize
 end
 
-function Utility:TruncateText(text, maxLength, suffix)
-    suffix = suffix or "..."
-    if #text <= maxLength then
-        return text
-    end
-    return string.sub(text, 1, maxLength - #suffix) .. suffix
-end
-
--- Color utilities
-function Utility:LightenColor(color, amount)
-    amount = amount or 0.2
-    return Color3.new(
-        math.min(1, color.R + amount),
-        math.min(1, color.G + amount),
-        math.min(1, color.B + amount)
-    )
-end
-
-function Utility:DarkenColor(color, amount)
-    amount = amount or 0.2
-    return Color3.new(
-        math.max(0, color.R - amount),
-        math.max(0, color.G - amount),
-        math.max(0, color.B - amount)
-    )
-end
-
-function Utility:InvertColor(color)
-    return Color3.new(1 - color.R, 1 - color.G, 1 - color.B)
-end
-
-function Utility:LerpColor(color1, color2, alpha)
-    return Color3.new(
-        color1.R + (color2.R - color1.R) * alpha,
-        color1.G + (color2.G - color1.G) * alpha,
-        color1.B + (color2.B - color1.B) * alpha
-    )
-end
-
--- Math utilities
-function Utility:Clamp(value, min, max)
-    return math.max(min, math.min(max, value))
-end
-
-function Utility:Lerp(a, b, t)
-    return a + (b - a) * t
-end
-
-function Utility:Round(num, decimalPlaces)
-    decimalPlaces = decimalPlaces or 0
-    local mult = 10 ^ decimalPlaces
-    return math.floor(num * mult + 0.5) / mult
-end
-
-function Utility:Map(value, inMin, inMax, outMin, outMax)
-    return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
-end
-
--- Animation utilities
-function Utility:SpringAnimation(targetValue, currentValue, velocity, damping, stiffness, deltaTime)
-    damping = damping or 0.8
-    stiffness = stiffness or 0.2
-    deltaTime = deltaTime or 1/60
-
-    local force = (targetValue - currentValue) * stiffness
-    velocity = velocity + force * deltaTime
-    velocity = velocity * damping
-    currentValue = currentValue + velocity * deltaTime
-
-    return currentValue, velocity
-end
-
-function Utility:BounceAnimation(progress, bounces)
-    bounces = bounces or 3
-    local t = progress * math.pi * bounces
-    return math.abs(math.sin(t) / (t + 0.1))
-end
-
--- Input validation utilities
-function Utility:ValidateEmail(email)
-    return string.match(email, "^[%w._-]+@[%w._-]+%.[%w._-]+$") ~= nil
-end
-
-function Utility:ValidateURL(url)
-    return string.match(url, "^https?://[%w._~:/?#%%%[%]@!$&'()*+,;=-]+$") ~= nil
-end
-
-function Utility:ValidateNumber(value, min, max)
-    local num = tonumber(value)
-    if not num then return false end
-    if min and num < min then return false end
-    if max and num > max then return false end
-    return true
-end
-
--- Table utilities
-function Utility:DeepCopy(original)
-    local copy = {}
-    for key, value in pairs(original) do
-        if type(value) == "table" then
-            copy[key] = Utility:DeepCopy(value)
-        else
-            copy[key] = value
-        end
-    end
-    return copy
-end
-
-function Utility:MergeTables(t1, t2)
-    local result = Utility:DeepCopy(t1)
-    for key, value in pairs(t2) do
-        if type(value) == "table" and type(result[key]) == "table" then
-            result[key] = Utility:MergeTables(result[key], value)
-        else
-            result[key] = value
-        end
-    end
-    return result
-end
-
-function Utility:FindInTable(table, value)
-    for i, v in ipairs(table) do
-        if v == value then
-            return i
-        end
-    end
-    return nil
-end
-
--- String utilities
-function Utility:SplitString(str, delimiter)
-    local result = {}
-    for match in string.gmatch(str, "([^" .. delimiter .. "]+)") do
-        table.insert(result, match)
-    end
-    return result
-end
-
-function Utility:Capitalize(str)
-    return string.upper(string.sub(str, 1, 1)) .. string.lower(string.sub(str, 2))
-end
-
-function Utility:ToCamelCase(str)
-    return string.gsub(str, "_(%w)", function(c) return string.upper(c) end)
-end
-
-function Utility:ToSnakeCase(str)
-    return string.gsub(str, "(%u)", function(c) return "_" .. string.lower(c) end)
-end
-
 -- ═══════════════════════════════════════════════════════════════════════
--- 📊 ADVANCED LIBRARY CORE
+-- 📚 MAIN LIBRARY
 -- ═══════════════════════════════════════════════════════════════════════
 
-local Library = {
-    Version = "3.0.0",
-    Flags = {},
-    Themes = Themes,
-    Utility = Utility,
-    Instances = {},
-    Connections = {},
-    Animations = {},
-    Notifications = {},
-    Windows = {},
-    ActiveWindow = nil
-}
-
+local Library = {}
 Library.__index = Library
+Library.Version = "2.5.0"
+Library.Flags = {}
+Library.ThemeCallbacks = {}
+Library.VisibilityCallbacks = {}
 
--- Enhanced window creation with advanced features
+-- Create new window
 function Library:CreateWindow(config)
-    config = config or {}
-
-    local window = setmetatable({
-        Name = config.Name or "Lapo Library",
-        Size = config.Size or UDim2.new(0, 600, 0, 500),
-        Position = config.Position or UDim2.new(0.5, 0, 0.5, 0),
-        Theme = config.Theme or "Dark",
-        Draggable = config.Draggable ~= false,
-        ToggleKey = config.ToggleKey or Enum.KeyCode.RightShift,
-        ConfigFile = config.ConfigFile or "DefaultConfig",
-        MinimizeKey = config.MinimizeKey or Enum.KeyCode.RightControl,
-        AnimationSpeed = config.AnimationSpeed or 1,
-        ShowMinimizeButton = config.ShowMinimizeButton ~= false,
-        ShowCloseButton = config.ShowCloseButton ~= false,
-        AutoSave = config.AutoSave ~= false,
-        AutoLoad = config.AutoLoad ~= false,
-
-        -- Internal state
-        Visible = true,
-        Minimized = false,
-        Tabs = {},
-        CurrentTab = nil,
-        Elements = {},
-        Connections = {},
-        Animations = {},
-        IsDragging = false,
-        LastPosition = nil,
-        Bounds = config.Bounds or {
-            MinX = 0,
-            MaxX = 0,
-            MinY = 0,
-            MaxY = 0
-        }
-    }, self)
-
-    -- Destroy existing window
-    local existingGui = CoreGui:FindFirstChild("LapoLibrary_Window")
-    if not existingGui and RunService:IsStudio() then
-        existingGui = PlayerGui:FindFirstChild("LapoLibrary_Window")
-    end
-    if existingGui then
-        existingGui:Destroy()
-    end
-
-    -- Initialize theme
-    window.CurrentTheme = Utility:DeepCopy(Themes[window.Theme] or Themes.Dark)
-
+    local self = setmetatable({}, Library)
+    
+    -- Configuration
+    self.Name = config.Name or "Nexus UI"
+    self.Size = config.Size or UDim2.new(0, 580, 0, 460)
+    self.Position = config.Position or UDim2.new(0.5, 0, 0.5, 0)
+    self.ThemeName = config.Theme or "Dark"
+    self.Theme = Themes[self.ThemeName] or Themes.Dark
+    self.Draggable = config.Draggable ~= false
+    self.ToggleKey = config.ToggleKey or Enum.KeyCode.RightShift
+    self.ConfigFile = config.ConfigFile or "DefaultConfig"
+    
+    -- State
+    self.Tabs = {}
+    self.CurrentTab = nil
+    self.Visible = true
+    self.Elements = {}
+    self.Notifications = {}
+    
     -- Build UI
-    window:_BuildUI()
-    window:_SetupInputHandlers()
-
-    -- Auto-load config
-    if window.AutoLoad then
-        window:LoadConfig()
-    end
-
-    -- Register window
-    table.insert(Library.Windows, window)
-    Library.ActiveWindow = window
-
-    return window
+    self:_BuildUI()
+    self:_SetupKeybind()
+    
+    return self
 end
 
--- Enhanced UI building
+-- Build main UI structure
 function Library:_BuildUI()
-    local theme = self.CurrentTheme
-
-    -- Main ScreenGui
+    local theme = self.Theme
+    
+    -- ScreenGui
     self.ScreenGui = Utility:Create("ScreenGui", {
-        Name = "LapoLibrary_Window",
+        Name = "NexusUI_" .. HttpService:GenerateGUID(false):sub(1, 8),
         ResetOnSpawn = false,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-        Parent = RunService:IsStudio() and PlayerGui or CoreGui
+        Parent = RunService:IsStudio() and LocalPlayer:WaitForChild("PlayerGui") or CoreGui
     })
-
+    
     -- Blur overlay for modals
     self.BlurOverlay = Utility:Create("Frame", {
+        Name = "BlurOverlay",
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundColor3 = theme.Overlay,
-        BackgroundTransparency = 0.8,
+        BackgroundTransparency = 1,
         BorderSizePixel = 0,
         Visible = false,
-        ZIndex = 100,
+        ZIndex = 5,
         Parent = self.ScreenGui
     })
-
+    
     -- Main container
     self.MainFrame = Utility:Create("Frame", {
         Name = "MainFrame",
@@ -1173,38 +526,43 @@ function Library:_BuildUI()
         ZIndex = 1,
         Parent = self.ScreenGui
     })
-
-    Utility:AddCorner(self.MainFrame, theme.CornerRadius)
+    
+    Utility:Create("UICorner", {
+        CornerRadius = theme.CornerRadius,
+        Parent = self.MainFrame
+    })
+    
     Utility:AddStroke(self.MainFrame, theme.Border, 1, 0.8)
-
-    if theme.Shadows then
-        Utility:AddShadow(self.MainFrame, theme.Shadow, 25, 0.4)
-    end
-
-    -- Background gradient
+    Utility:AddShadow(self.MainFrame, theme.Shadow, 20, 0.5)
+    
+    -- Gradient overlay for depth
     Utility:AddGradient(self.MainFrame, ColorSequence.new{
         ColorSequenceKeypoint.new(0, theme.BgPrimary),
         ColorSequenceKeypoint.new(1, theme.BgSecondary)
     }, 180)
-
+    
     -- Topbar
     self.Topbar = Utility:Create("Frame", {
         Name = "Topbar",
-        Size = UDim2.new(1, 0, 0, 50),
+        Size = UDim2.new(1, 0, 0, 45),
         BackgroundColor3 = theme.BgElevated,
         BorderSizePixel = 0,
         ZIndex = 2,
         Parent = self.MainFrame
     })
-
-    Utility:AddCorner(self.Topbar, theme.CornerRadius)
+    
+    Utility:Create("UICorner", {
+        CornerRadius = theme.CornerRadius,
+        Parent = self.Topbar
+    })
+    
     Utility:AddStroke(self.Topbar, theme.BorderSubtle, 1, 0.9)
-
+    
     -- Title
     self.TitleLabel = Utility:Create("TextLabel", {
         Name = "Title",
-        Size = UDim2.new(1, -120, 1, 0),
-        Position = UDim2.new(0, 20, 0, 0),
+        Size = UDim2.new(1, -100, 1, 0),
+        Position = UDim2.new(0, 15, 0, 0),
         BackgroundTransparency = 1,
         Text = self.Name,
         TextColor3 = theme.TextPrimary,
@@ -1214,72 +572,48 @@ function Library:_BuildUI()
         ZIndex = 3,
         Parent = self.Topbar
     })
-
-    -- Control buttons container
-    self.ControlButtons = Utility:Create("Frame", {
-        Name = "ControlButtons",
-        Size = UDim2.new(0, 90, 1, 0),
-        Position = UDim2.new(1, -100, 0, 0),
-        BackgroundTransparency = 1,
+    
+    -- Close button
+    self.CloseButton = Utility:Create("TextButton", {
+        Name = "CloseButton",
+        Size = UDim2.new(0, 35, 0, 35),
+        Position = UDim2.new(1, -40, 0.5, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
+        BackgroundColor3 = theme.Danger,
+        BackgroundTransparency = 0.9,
+        BorderSizePixel = 0,
+        Text = "×",
+        TextColor3 = theme.TextPrimary,
+        TextSize = 20,
+        Font = Enum.Font.GothamBold,
         ZIndex = 3,
         Parent = self.Topbar
     })
-
-    Utility:AddListLayout(self.ControlButtons, Enum.SortOrder.LayoutOrder, UDim.new(0, 5))
-
-    -- Minimize button
-    if self.ShowMinimizeButton then
-        self.MinimizeButton = Utility:Create("TextButton", {
-            Name = "MinimizeButton",
-            Size = UDim2.new(0, 25, 0, 25),
-            BackgroundColor3 = theme.Warning,
-            BackgroundTransparency = 0.9,
-            BorderSizePixel = 0,
-            Text = "−",
-            TextColor3 = theme.TextPrimary,
-            TextSize = 16,
-            Font = Enum.Font.GothamBold,
-            ZIndex = 4,
-            Parent = self.ControlButtons
-        })
-
-        Utility:AddCorner(self.MinimizeButton, UDim.new(0, 4))
-
-        self.MinimizeButton.MouseButton1Click:Connect(function()
-            self:ToggleMinimize()
-            Utility:RippleEffect(self.MinimizeButton, theme.Primary)
-        end)
-    end
-
-    -- Close button
-    if self.ShowCloseButton then
-        self.CloseButton = Utility:Create("TextButton", {
-            Name = "CloseButton",
-            Size = UDim2.new(0, 25, 0, 25),
-            BackgroundColor3 = theme.Danger,
-            BackgroundTransparency = 0.9,
-            BorderSizePixel = 0,
-            Text = "×",
-            TextColor3 = theme.TextPrimary,
-            TextSize = 16,
-            Font = Enum.Font.GothamBold,
-            ZIndex = 4,
-            Parent = self.ControlButtons
-        })
-
-        Utility:AddCorner(self.CloseButton, UDim.new(0, 4))
-
-        self.CloseButton.MouseButton1Click:Connect(function()
-            self:Toggle()
-            Utility:RippleEffect(self.CloseButton, theme.Danger)
-        end)
-    end
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = self.CloseButton
+    })
+    
+    self.CloseButton.MouseButton1Click:Connect(function()
+        self:Toggle()
+    end)
+    
+    self.CloseButton.MouseEnter:Connect(function()
+        Utility:Tween(self.CloseButton, {BackgroundTransparency = 0.5}, 0.2)
+        Utility:Tween(self.CloseButton, {Size = UDim2.new(0, 38, 0, 38)}, 0.2, Enum.EasingStyle.Back)
+    end)
+    
+    self.CloseButton.MouseLeave:Connect(function()
+        Utility:Tween(self.CloseButton, {BackgroundTransparency = 0.9}, 0.2)
+        Utility:Tween(self.CloseButton, {Size = UDim2.new(0, 35, 0, 35)}, 0.2, Enum.EasingStyle.Quint)
+    end)
+    
     -- Tab container (sidebar)
     self.TabContainer = Utility:Create("ScrollingFrame", {
         Name = "TabContainer",
-        Size = UDim2.new(0, 160, 1, -60),
-        Position = UDim2.new(0, 10, 0, 55),
+        Size = UDim2.new(0, 150, 1, -55),
+        Position = UDim2.new(0, 10, 0, 50),
         BackgroundColor3 = theme.BgSecondary,
         BorderSizePixel = 0,
         ScrollBarThickness = 4,
@@ -1289,416 +623,270 @@ function Library:_BuildUI()
         ZIndex = 2,
         Parent = self.MainFrame
     })
-
-    Utility:AddCorner(self.TabContainer, theme.CornerRadius)
-    Utility:AddStroke(self.TabContainer, theme.BorderSubtle, 1, 0.8)
-    Utility:AddListLayout(self.TabContainer, Enum.SortOrder.LayoutOrder, UDim.new(0, 5))
-    Utility:AddPadding(self.TabContainer, UDim.new(0, 8))
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = theme.CornerRadius,
+        Parent = self.TabContainer
+    })
+    
+    Utility:Create("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 5),
+        Parent = self.TabContainer
+    })
+    
+    Utility:Create("UIPadding", {
+        PaddingTop = UDim.new(0, 8),
+        PaddingBottom = UDim.new(0, 8),
+        PaddingLeft = UDim.new(0, 8),
+        PaddingRight = UDim.new(0, 8),
+        Parent = self.TabContainer
+    })
+    
     -- Content container
     self.ContentContainer = Utility:Create("Frame", {
         Name = "ContentContainer",
-        Size = UDim2.new(1, -180, 1, -60),
-        Position = UDim2.new(0, 180, 0, 55),
+        Size = UDim2.new(1, -180, 1, -55),
+        Position = UDim2.new(0, 170, 0, 50),
         BackgroundTransparency = 1,
         ZIndex = 2,
         Parent = self.MainFrame
     })
-
+    
     -- Make draggable
     if self.Draggable then
-        Utility:MakeDraggable(self.MainFrame, self.Topbar, self.Bounds,
-            function() self.IsDragging = true end,
-            function() self.IsDragging = false end
-        )
+        Utility:MakeDraggable(self.MainFrame, self.Topbar)
     end
-
-    -- Store instance references
-    Library.Instances[self] = true
 end
 
--- Enhanced input handlers
-function Library:_SetupInputHandlers()
-    -- Toggle keybind
-    table.insert(self.Connections, UserInputService.InputBegan:Connect(function(input, gameProcessed)
+-- Setup keybind toggle
+function Library:_SetupKeybind()
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if not gameProcessed and input.KeyCode == self.ToggleKey then
             self:Toggle()
-        elseif not gameProcessed and input.KeyCode == self.MinimizeKey then
-            self:ToggleMinimize()
         end
-    end))
-
-    -- Auto-save on changes
-    if self.AutoSave then
-        RunService.Heartbeat:Connect(function()
-            if self._configDirty then
-                self:SaveConfig()
-                self._configDirty = false
-            end
-        end)
-    end
+    end)
 end
 
--- Enhanced toggle with animations
+-- Toggle visibility
 function Library:Toggle()
     self.Visible = not self.Visible
-
+    
     if self.Visible then
         self.MainFrame.Visible = true
         Utility:Tween(self.MainFrame, {
-            Size = self.Size,
-            BackgroundTransparency = 0
-        }, 0.4 * self.AnimationSpeed, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            Size = self.Size
+        }, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     else
         Utility:Tween(self.MainFrame, {
-            Size = UDim2.new(0, 0, 0, 0),
-            BackgroundTransparency = 1
-        }, 0.4 * self.AnimationSpeed, Enum.EasingStyle.Back, Enum.EasingDirection.In, function()
+            Size = UDim2.new(0, 0, 0, 0)
+        }, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In, function()
             self.MainFrame.Visible = false
         end)
     end
-
-    -- Trigger callbacks
-    self:_TriggerCallbacks("VisibilityChanged", self.Visible)
-end
-
--- New minimize functionality
-function Library:ToggleMinimize()
-    self.Minimized = not self.Minimized
-
-    if self.Minimized then
-        self._originalSize = self.MainFrame.Size
-        Utility:Tween(self.MainFrame, {
-            Size = UDim2.new(self.Size.X.Scale, self.Size.X.Offset, 0, 50)
-        }, 0.3 * self.AnimationSpeed, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-
-        -- Hide content
-        self.TabContainer.Visible = false
-        self.ContentContainer.Visible = false
-    else
-        Utility:Tween(self.MainFrame, {
-            Size = self._originalSize or self.Size
-        }, 0.3 * self.AnimationSpeed, Enum.EasingStyle.Quint, Enum.EasingDirection.Out, function()
-            self.TabContainer.Visible = true
-            self.ContentContainer.Visible = true
-        end)
+    
+    -- Call visibility callbacks
+    for _, callback in pairs(self.VisibilityCallbacks) do
+        pcall(callback, self.Visible)
     end
-
-    self:_TriggerCallbacks("MinimizeChanged", self.Minimized)
 end
 
--- Enhanced theme system
+-- Set theme
 function Library:SetTheme(themeName)
-    if not Themes[themeName] then
-        warn("Theme '" .. themeName .. "' not found. Available themes: " .. table.concat(Utility:MergeTables({}, function() local t={} for k in pairs(Themes) do table.insert(t,k) end return t end), ", "))
-        return
-    end
-
-    self.Theme = themeName
-    self.CurrentTheme = Utility:DeepCopy(Themes[themeName])
-
-    -- Update all UI elements
+    if not Themes[themeName] then return end
+    
+    self.ThemeName = themeName
+    self.Theme = Themes[themeName]
+    
+    -- Update all UI elements with new theme
     self:_UpdateTheme()
-
-    -- Trigger callbacks
-    self:_TriggerCallbacks("ThemeChanged", themeName, self.CurrentTheme)
-
-    -- Mark config as dirty
-    self._configDirty = true
+    
+    -- Call theme callbacks
+    for _, callback in pairs(self.ThemeCallbacks) do
+        pcall(callback, themeName, self.Theme)
+    end
 end
 
--- Enhanced theme update
+-- Update theme colors
 function Library:_UpdateTheme()
-    local theme = self.CurrentTheme
-
-    -- Update main elements
+    local theme = self.Theme
+    
     self.MainFrame.BackgroundColor3 = theme.BgPrimary
     self.Topbar.BackgroundColor3 = theme.BgElevated
     self.TitleLabel.TextColor3 = theme.TextPrimary
     self.TabContainer.BackgroundColor3 = theme.BgSecondary
-
+    
     -- Update all tabs and elements
     for _, tab in pairs(self.Tabs) do
         if tab.UpdateTheme then
             tab:UpdateTheme(theme)
         end
     end
-
-    -- Update control buttons
-    if self.MinimizeButton then
-        self.MinimizeButton.BackgroundColor3 = theme.Warning
-    end
-    if self.CloseButton then
-        self.CloseButton.BackgroundColor3 = theme.Danger
-    end
 end
 
--- Callback system
+-- Register custom theme
+function Library:RegisterTheme(name, themeData)
+    Themes[name] = themeData
+end
+
+-- Get current theme
+function Library:GetCurrentTheme()
+    return self.ThemeName, self.Theme
+end
+
+-- On theme change callback
 function Library:OnThemeChange(callback)
-    self._themeCallbacks = self._themeCallbacks or {}
-    table.insert(self._themeCallbacks, callback)
+    table.insert(self.ThemeCallbacks, callback)
 end
 
+-- On visibility change callback
 function Library:OnVisibilityChange(callback)
-    self._visibilityCallbacks = self._visibilityCallbacks or {}
-    table.insert(self._visibilityCallbacks, callback)
+    table.insert(self.VisibilityCallbacks, callback)
 end
 
-function Library:OnMinimizeChange(callback)
-    self._minimizeCallbacks = self._minimizeCallbacks or {}
-    table.insert(self._minimizeCallbacks, callback)
-end
-
-function Library:_TriggerCallbacks(eventType, ...)
-    local callbacks = self["_" .. string.lower(eventType) .. "Callbacks"]
-    if callbacks then
-        for _, callback in ipairs(callbacks) do
-            pcall(callback, ...)
-        end
-    end
-end
-
--- Enhanced config system
+-- Save config
 function Library:SaveConfig(fileName)
-    local config = {
-        _theme = self.Theme,
-        _position = {self.MainFrame.Position.X.Scale, self.MainFrame.Position.X.Offset, self.MainFrame.Position.Y.Scale, self.MainFrame.Position.Y.Offset},
-        _size = {self.Size.X.Scale, self.Size.X.Offset, self.Size.Y.Scale, self.Size.Y.Offset},
-        _minimized = self.Minimized,
-        _flags = {}
-    }
-
-    -- Save all flags
+    local config = {}
+    
     for flag, value in pairs(Library.Flags) do
-        config._flags[flag] = value
+        config[flag] = value
     end
-
+    
+    config._theme = self.ThemeName
+    
     return Utility:SaveConfig(fileName or self.ConfigFile, config)
 end
 
+-- Load config
 function Library:LoadConfig(fileName)
     local config = Utility:LoadConfig(fileName or self.ConfigFile)
-
+    
     if config then
-        -- Load theme
-        if config._theme then
-            self:SetTheme(config._theme)
-        end
-
-        -- Load position
-        if config._position then
-            self.MainFrame.Position = UDim2.new(unpack(config._position))
-        end
-
-        -- Load size
-        if config._size then
-            self.Size = UDim2.new(unpack(config._size))
-            if not self.Minimized then
-                self.MainFrame.Size = self.Size
-            end
-        end
-
-        -- Load minimized state
-        if config._minimized then
-            self.Minimized = true
-            self:ToggleMinimize()
-        end
-
-        -- Load flags
-        if config._flags then
-            for flag, value in pairs(config._flags) do
+        for flag, value in pairs(config) do
+            if flag == "_theme" then
+                self:SetTheme(value)
+            elseif Library.Flags[flag] ~= nil then
                 Library.Flags[flag] = value
                 -- Update UI element
                 if self.Elements[flag] and self.Elements[flag].SetValue then
-                    self.Elements[flag]:SetValue(value, true)
+                    self.Elements[flag]:SetValue(value)
                 end
             end
         end
-
         return true
     end
     return false
 end
 
--- Enhanced notification system
+-- Create notification
 function Library:Notify(config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
-    local notif = {
+    local theme = self.Theme
+    local notifConfig = {
         Title = config.Title or "Notification",
         Content = config.Content or "",
         Duration = config.Duration or 3,
-        Type = config.Type or "Info",
-        Icon = config.Icon,
-        Actions = config.Actions or {},
-        Persistent = config.Persistent or false
+        Type = config.Type or "Info" -- Info, Success, Warning, Danger
     }
-
-    -- Create notification frame
-    local notifFrame = Utility:Create("Frame", {
+    
+    -- Notification container
+    local notif = Utility:Create("Frame", {
         Name = "Notification",
-        Size = UDim2.new(0, 320, 0, 0),
-        Position = UDim2.new(1, -340, 1, -20),
+        Size = UDim2.new(0, 300, 0, 0),
+        Position = UDim2.new(1, -320, 1, -20),
         AnchorPoint = Vector2.new(0, 1),
         BackgroundColor3 = theme.BgElevated,
         BorderSizePixel = 0,
         ClipsDescendants = true,
-        ZIndex = 200,
+        ZIndex = 10,
         Parent = self.ScreenGui
     })
-
-    Utility:AddCorner(notifFrame, theme.CornerRadius)
-    Utility:AddStroke(notifFrame, theme[notif.Type] or theme.Info, 2, 0.5)
-
-    if theme.Shadows then
-        Utility:AddShadow(notifFrame, theme.Shadow, 15, 0.6)
-    end
-
-    -- Header
-    local header = Utility:Create("Frame", {
-        Size = UDim2.new(1, -20, 0, 30),
-        Position = UDim2.new(0, 10, 0, 10),
-        BackgroundTransparency = 1,
-        ZIndex = 201,
-        Parent = notifFrame
+    
+    Utility:Create("UICorner", {
+        CornerRadius = theme.CornerRadius,
+        Parent = notif
     })
-
-    -- Icon
-    if notif.Icon then
-        local icon = Utility:Create("ImageLabel", {
-            Size = UDim2.new(0, 20, 0, 20),
-            Position = UDim2.new(0, 0, 0.5, 0),
-            AnchorPoint = Vector2.new(0, 0.5),
-            BackgroundTransparency = 1,
-            Image = notif.Icon,
-            ImageColor3 = theme[notif.Type] or theme.Info,
-            ZIndex = 202,
-            Parent = header
-        })
-    end
-
+    
+    local accentColor = theme[notifConfig.Type] or theme.Info
+    Utility:AddStroke(notif, accentColor, 2, 0.5)
+    Utility:AddShadow(notif, theme.Shadow, 15, 0.6)
+    
     -- Title
     local title = Utility:Create("TextLabel", {
-        Size = UDim2.new(1, notif.Icon and -30 or 0, 1, 0),
-        Position = UDim2.new(0, notif.Icon and 30 or 0, 0, 0),
+        Name = "Title",
+        Size = UDim2.new(1, -20, 0, 20),
+        Position = UDim2.new(0, 10, 0, 10),
         BackgroundTransparency = 1,
-        Text = notif.Title,
+        Text = notifConfig.Title,
         TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.GothamBold,
         TextXAlignment = Enum.TextXAlignment.Left,
-        ZIndex = 202,
-        Parent = header
+        ZIndex = 11,
+        Parent = notif
     })
-
+    
     -- Content
     local content = Utility:Create("TextLabel", {
+        Name = "Content",
         Size = UDim2.new(1, -20, 0, 0),
-        Position = UDim2.new(0, 10, 0, 45),
+        Position = UDim2.new(0, 10, 0, 35),
         AutomaticSize = Enum.AutomaticSize.Y,
         BackgroundTransparency = 1,
-        Text = notif.Content,
+        Text = notifConfig.Content,
         TextColor3 = theme.TextSecondary,
         TextSize = theme.FontSizes.Small,
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextWrapped = true,
-        ZIndex = 201,
-        Parent = notifFrame
+        ZIndex = 11,
+        Parent = notif
     })
-
-    -- Actions container
-    local actionsHeight = 0
-    if #notif.Actions > 0 then
-        local actionsFrame = Utility:Create("Frame", {
-            Size = UDim2.new(1, -20, 0, 30),
-            Position = UDim2.new(0, 10, 0, 50 + content.TextBounds.Y),
-            BackgroundTransparency = 1,
-            ZIndex = 201,
-            Parent = notifFrame
-        })
-
-        Utility:AddListLayout(actionsFrame, Enum.SortOrder.LayoutOrder, UDim.new(0, 5))
-
-        for _, action in ipairs(notif.Actions) do
-            local actionButton = Utility:Create("TextButton", {
-                Size = UDim2.new(0, 80, 0, 25),
-                BackgroundColor3 = theme.Primary,
-                BorderSizePixel = 0,
-                Text = action.Text,
-                TextColor3 = theme.TextPrimary,
-                TextSize = theme.FontSizes.Small,
-                Font = Enum.Font.GothamMedium,
-                ZIndex = 202,
-                Parent = actionsFrame
-            })
-
-            Utility:AddCorner(actionButton, UDim.new(0, 4))
-
-            actionButton.MouseButton1Click:Connect(function()
-                pcall(action.Callback)
-                if not notif.Persistent then
-                    self:_DismissNotification(notifFrame)
-                end
-            end)
-        end
-
-        actionsHeight = 35
-    end
-
-    -- Calculate total height
-    local totalHeight = 60 + content.TextBounds.Y + actionsHeight
-
+    
+    -- Calculate height
+    local totalHeight = 50 + content.TextBounds.Y
+    
     -- Animate in
-    Utility:Tween(notifFrame, {
-        Size = UDim2.new(0, 320, 0, totalHeight)
+    Utility:Tween(notif, {
+        Size = UDim2.new(0, 300, 0, totalHeight)
     }, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-
+    
     -- Auto dismiss
-    if not notif.Persistent then
-        task.delay(notif.Duration, function()
-            self:_DismissNotification(notifFrame)
+    task.delay(notifConfig.Duration, function()
+        Utility:Tween(notif, {
+            Position = UDim2.new(1, 0, 1, -20)
+        }, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In, function()
+            notif:Destroy()
         end)
-    end
-
-    -- Store notification
-    table.insert(self.Notifications, notifFrame)
-
-    return notifFrame
+    end)
+    
+    table.insert(self.Notifications, notif)
 end
 
-function Library:_DismissNotification(notifFrame)
-    if not notifFrame or not notifFrame:IsDescendantOf(self.ScreenGui) then return end
-
-    Utility:Tween(notifFrame, {
-        Position = UDim2.new(1, 0, 1, -20),
-        BackgroundTransparency = 1
-    }, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In, function()
-        notifFrame:Destroy()
-    end)
+-- Destroy library
+function Library:Destroy()
+    if self.ScreenGui then
+        self.ScreenGui:Destroy()
+    end
+    Library.Flags = {}
 end
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 📑 ENHANCED TAB SYSTEM
+-- 📑 TAB SYSTEM
 -- ═══════════════════════════════════════════════════════════════════════
 
 function Library:CreateTab(config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
+    local theme = self.Theme
     local tab = {
         Name = config.Name or "Tab",
         Icon = config.Icon,
         Sections = {},
-        Elements = {},
-        LayoutOrder = #self.Tabs + 1
+        Elements = {}
     }
-
+    
     -- Tab button
     tab.Button = Utility:Create("TextButton", {
         Name = "TabButton_" .. tab.Name,
-        Size = UDim2.new(1, -16, 0, 40),
+        Size = UDim2.new(1, -16, 0, 35),
         BackgroundColor3 = theme.BgTertiary,
         BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
@@ -1707,20 +895,28 @@ function Library:CreateTab(config)
         ZIndex = 3,
         Parent = self.TabContainer
     })
-
-    Utility:AddCorner(tab.Button, UDim.new(0, 6))
-
-    -- Tab content
-    tab.Content = Utility:Create("Frame", {
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundTransparency = 1,
-        ZIndex = 3,
-        Parent = self.ContentContainer
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = tab.Button
     })
-
-    Utility:AddListLayout(tab.Content, Enum.SortOrder.LayoutOrder, UDim.new(0, 15))
-
-    -- Icon
+    
+    -- Tab label
+    tab.Label = Utility:Create("TextLabel", {
+        Name = "Label",
+        Size = UDim2.new(1, -40, 1, 0),
+        Position = UDim2.new(0, 35, 0, 0),
+        BackgroundTransparency = 1,
+        Text = tab.Name,
+        TextColor3 = theme.TextSecondary,
+        TextSize = theme.FontSizes.Body,
+        Font = Enum.Font.GothamMedium,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        ZIndex = 4,
+        Parent = tab.Button
+    })
+    
+    -- Tab icon (if provided)
     if tab.Icon then
         tab.IconImage = Utility:Create("ImageLabel", {
             Name = "Icon",
@@ -1734,54 +930,35 @@ function Library:CreateTab(config)
             Parent = tab.Button
         })
     end
-
-    -- Label
-    tab.Label = Utility:Create("TextLabel", {
-        Name = "Label",
-        Size = UDim2.new(1, tab.Icon and -40 or -16, 1, 0),
-        Position = UDim2.new(0, tab.Icon and 35 or 8, 0, 0),
+    
+    -- Tab content container
+    tab.Container = Utility:Create("ScrollingFrame", {
+        Name = "TabContent_" .. tab.Name,
+        Size = UDim2.new(1, -20, 1, -10),
+        Position = UDim2.new(0, 10, 0, 5),
         BackgroundTransparency = 1,
-        Text = tab.Name,
-        TextColor3 = theme.TextSecondary,
-        TextSize = theme.FontSizes.Body,
-        Font = Enum.Font.GothamMedium,
-        TextXAlignment = Enum.TextXAlignment.Left,
-        ZIndex = 4,
-        Parent = tab.Button
-    })
-
-    -- Notification badge
-    tab.Badge = Utility:Create("Frame", {
-        Name = "Badge",
-        Size = UDim2.new(0, 16, 0, 16),
-        Position = UDim2.new(1, -8, 0, -8),
-        AnchorPoint = Vector2.new(1, 0),
-        BackgroundColor3 = theme.Danger,
         BorderSizePixel = 0,
+        ScrollBarThickness = 4,
+        ScrollBarImageColor3 = theme.Primary,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
         Visible = false,
-        ZIndex = 5,
-        Parent = tab.Button
+        ZIndex = 3,
+        Parent = self.ContentContainer
     })
-
-    Utility:AddCorner(tab.Badge, UDim.new(1, 0))
-
-    tab.BadgeLabel = Utility:Create("TextLabel", {
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundTransparency = 1,
-        Text = "!",
-        TextColor3 = theme.TextPrimary,
-        TextSize = 10,
-        Font = Enum.Font.GothamBold,
-        ZIndex = 6,
-        Parent = tab.Badge
+    
+    Utility:Create("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 10),
+        Parent = tab.Container
     })
-
-    -- Tab interactions
+    
+    -- Tab button click
     tab.Button.MouseButton1Click:Connect(function()
         self:SelectTab(tab)
         Utility:RippleEffect(tab.Button, theme.Primary)
     end)
-
+    
     -- Hover effects
     tab.Button.MouseEnter:Connect(function()
         if self.CurrentTab ~= tab then
@@ -1792,7 +969,7 @@ function Library:CreateTab(config)
             end
         end
     end)
-
+    
     tab.Button.MouseLeave:Connect(function()
         if self.CurrentTab ~= tab then
             Utility:Tween(tab.Button, {BackgroundTransparency = 0.3}, 0.2)
@@ -1802,87 +979,66 @@ function Library:CreateTab(config)
             end
         end
     end)
-
-    -- Theme update method
+    
+    -- Update theme method
     function tab:UpdateTheme(newTheme)
         tab.Button.BackgroundColor3 = newTheme.BgTertiary
         tab.Label.TextColor3 = self.CurrentTab == tab and newTheme.TextPrimary or newTheme.TextSecondary
         if tab.IconImage then
-            tab.IconImage.ImageColor3 = self.CurrentTab == tab and newTheme.Primary or newTheme.TextSecondary
-        end
-        tab.Badge.BackgroundColor3 = newTheme.Danger
-        tab.BadgeLabel.TextColor3 = newTheme.TextPrimary
-    end
-
-    -- Badge methods
-    function tab:SetBadge(count)
-        if count and count > 0 then
-            tab.Badge.Visible = true
-            tab.BadgeLabel.Text = count > 99 and "99+" or tostring(count)
-        else
-            tab.Badge.Visible = false
+            tab.IconImage.ImageColor3 = self.CurrentTab == tab and newTheme.TextPrimary or newTheme.TextSecondary
         end
     end
-
-    function tab:ClearBadge()
-        tab:SetBadge(0)
-    end
-
-    -- Register tab
+    
     table.insert(self.Tabs, tab)
-
-    -- Auto-select first tab
+    
+    -- Select first tab automatically
     if #self.Tabs == 1 then
         self:SelectTab(tab)
     end
-
-    -- Expose methods
+    
+    -- Expose methods for creating components
     tab.CreateSection = function(_, name)
         return self:_CreateSection(tab, name)
     end
-
+    
     return tab
 end
 
+-- Select tab
 function Library:SelectTab(tab)
     -- Deselect current
     if self.CurrentTab then
-        self.CurrentTab.Content.Visible = false
+        self.CurrentTab.Container.Visible = false
         Utility:Tween(self.CurrentTab.Button, {BackgroundTransparency = 0.3}, 0.2)
-        Utility:Tween(self.CurrentTab.Label, {TextColor3 = self.CurrentTheme.TextSecondary}, 0.2)
+        Utility:Tween(self.CurrentTab.Label, {TextColor3 = self.Theme.TextSecondary}, 0.2)
         if self.CurrentTab.IconImage then
-            Utility:Tween(self.CurrentTab.IconImage, {ImageColor3 = self.CurrentTheme.TextSecondary}, 0.2)
+            Utility:Tween(self.CurrentTab.IconImage, {ImageColor3 = self.Theme.TextSecondary}, 0.2)
         end
     end
-
+    
     -- Select new
     self.CurrentTab = tab
-    tab.Content.Visible = true
+    tab.Container.Visible = true
     Utility:Tween(tab.Button, {BackgroundTransparency = 0}, 0.2)
-    Utility:Tween(tab.Label, {TextColor3 = self.CurrentTheme.TextPrimary}, 0.2)
+    Utility:Tween(tab.Label, {TextColor3 = self.Theme.TextPrimary}, 0.2)
     if tab.IconImage then
-        Utility:Tween(tab.IconImage, {ImageColor3 = self.CurrentTheme.Primary}, 0.2)
+        Utility:Tween(tab.IconImage, {ImageColor3 = self.Theme.Primary}, 0.2)
     end
-
-    Utility:AddStroke(tab.Button, self.CurrentTheme.Primary, 2, 0.3)
-
-    -- Trigger callbacks
-    self:_TriggerCallbacks("TabChanged", tab)
+    
+    Utility:AddStroke(tab.Button, self.Theme.Primary, 1.5, 0.3)
 end
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 📦 ENHANCED SECTION SYSTEM
+-- 📦 SECTION SYSTEM
 -- ═══════════════════════════════════════════════════════════════════════
 
 function Library:_CreateSection(tab, name)
-    local theme = self.CurrentTheme
+    local theme = self.Theme
     local section = {
         Name = name,
-        Elements = {},
-        Collapsed = false,
-        LayoutOrder = #tab.Sections + 1
+        Elements = {}
     }
-
+    
     -- Section container
     section.Container = Utility:Create("Frame", {
         Name = "Section_" .. name,
@@ -1891,52 +1047,42 @@ function Library:_CreateSection(tab, name)
         BackgroundColor3 = theme.BgSecondary,
         BorderSizePixel = 0,
         ZIndex = 4,
-        Parent = tab.Content
+        Parent = tab.Container
     })
-
-    Utility:AddCorner(section.Container, theme.CornerRadius)
-    Utility:AddStroke(section.Container, theme.BorderSubtle, 1, 0.8)
-
-    -- Section header
-    section.Header = Utility:Create("Frame", {
-        Name = "Header",
-        Size = UDim2.new(1, -20, 0, 35),
-        Position = UDim2.new(0, 10, 0, 5),
-        BackgroundTransparency = 1,
-        ZIndex = 5,
+    
+    Utility:Create("UICorner", {
+        CornerRadius = theme.CornerRadius,
         Parent = section.Container
     })
-
-    -- Title
-    section.Title = Utility:Create("TextLabel", {
-        Name = "Title",
-        Size = UDim2.new(1, -30, 1, 0),
-        Position = UDim2.new(0, 0, 0, 0),
+    
+    Utility:AddStroke(section.Container, theme.BorderSubtle, 1, 0.8)
+    
+    -- Section header
+    section.Header = Utility:Create("TextLabel", {
+        Name = "Header",
+        Size = UDim2.new(1, -20, 0, 30),
+        Position = UDim2.new(0, 10, 0, 5),
         BackgroundTransparency = 1,
         Text = name,
         TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.GothamBold,
         TextXAlignment = Enum.TextXAlignment.Left,
-        ZIndex = 6,
-        Parent = section.Header
+        ZIndex = 5,
+        Parent = section.Container
     })
-
-    -- Collapse button
-    section.CollapseButton = Utility:Create("TextButton", {
-        Name = "CollapseButton",
-        Size = UDim2.new(0, 25, 0, 25),
-        Position = UDim2.new(1, -25, 0.5, 0),
-        AnchorPoint = Vector2.new(0, 0.5),
-        BackgroundTransparency = 1,
-        Text = "−",
-        TextColor3 = theme.TextSecondary,
-        TextSize = 16,
-        Font = Enum.Font.GothamBold,
-        ZIndex = 6,
-        Parent = section.Header
+    
+    -- Divider
+    section.Divider = Utility:Create("Frame", {
+        Name = "Divider",
+        Size = UDim2.new(1, -20, 0, 1),
+        Position = UDim2.new(0, 10, 0, 38),
+        BackgroundColor3 = theme.Divider,
+        BorderSizePixel = 0,
+        ZIndex = 5,
+        Parent = section.Container
     })
-
+    
     -- Content container
     section.Content = Utility:Create("Frame", {
         Name = "Content",
@@ -1947,141 +1093,119 @@ function Library:_CreateSection(tab, name)
         ZIndex = 5,
         Parent = section.Container
     })
-
-    Utility:AddListLayout(section.Content, Enum.SortOrder.LayoutOrder, UDim.new(0, 8))
-    Utility:AddPadding(section.Content, UDim.new(0, 5))
-
-    -- Collapse functionality
-    function section:ToggleCollapse()
-        section.Collapsed = not section.Collapsed
-
-        if section.Collapsed then
-            Utility:Tween(section.Content, {
-                Size = UDim2.new(1, -20, 0, 0)
-            }, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-            section.CollapseButton.Text = "+"
-        else
-            Utility:Tween(section.Content, {
-                Size = UDim2.new(1, -20, 0, 0),
-                AutomaticSize = Enum.AutomaticSize.Y
-            }, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-            section.CollapseButton.Text = "−"
-        end
-
-        self:_TriggerCallbacks("SectionCollapsed", section, section.Collapsed)
+    
+    Utility:Create("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 8),
+        Parent = section.Content
+    })
+    
+    Utility:Create("UIPadding", {
+        PaddingBottom = UDim.new(0, 10),
+        Parent = section.Content
+    })
+    
+    -- Component creation methods
+    section.CreateToggle = function(_, config)
+        return self:_CreateToggle(section, config)
     end
-
-    section.CollapseButton.MouseButton1Click:Connect(function()
-        section:ToggleCollapse()
-        Utility:RippleEffect(section.CollapseButton, theme.Primary)
-    end)
-
-    -- Theme update
-    function section:UpdateTheme(newTheme)
-        section.Container.BackgroundColor3 = newTheme.BgSecondary
-        section.Title.TextColor3 = newTheme.TextPrimary
-        section.CollapseButton.TextColor3 = newTheme.TextSecondary
+    
+    section.CreateButton = function(_, config)
+        return self:_CreateButton(section, config)
     end
-
-    -- Register section
+    
+    section.CreateSlider = function(_, config)
+        return self:_CreateSlider(section, config)
+    end
+    
+    section.CreateDropdown = function(_, config)
+        return self:_CreateDropdown(section, config)
+    end
+    
+    section.CreateInput = function(_, config)
+        return self:_CreateInput(section, config)
+    end
+    
+    section.CreateKeybind = function(_, config)
+        return self:_CreateKeybind(section, config)
+    end
+    
+    section.CreateColorPicker = function(_, config)
+        return self:_CreateColorPicker(section, config)
+    end
+    
+    section.CreateLabel = function(_, text)
+        return self:_CreateLabel(section, text)
+    end
+    
     table.insert(tab.Sections, section)
-
-    -- Expose component creation methods
-    section.CreateToggle = function(_, config) return self:_CreateToggle(section, config) end
-    section.CreateButton = function(_, config) return self:_CreateButton(section, config) end
-    section.CreateSlider = function(_, config) return self:_CreateSlider(section, config) end
-    section.CreateDropdown = function(_, config) return self:_CreateDropdown(section, config) end
-    section.CreateInput = function(_, config) return self:_CreateInput(section, config) end
-    section.CreateKeybind = function(_, config) return self:_CreateKeybind(section, config) end
-    section.CreateColorPicker = function(_, config) return self:_CreateColorPicker(section, config) end
-    section.CreateLabel = function(_, text) return self:_CreateLabel(section, text) end
-    section.CreateParagraph = function(_, config) return self:_CreateParagraph(section, config) end
-    section.CreateProgressBar = function(_, config) return self:_CreateProgressBar(section, config) end
-    section.CreateSpinner = function(_, config) return self:_CreateSpinner(section, config) end
-
     return section
 end
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 🎛️ ENHANCED COMPONENTS
+-- 🎛️ COMPONENTS: TOGGLE
 -- ═══════════════════════════════════════════════════════════════════════
 
--- Enhanced Toggle
 function Library:_CreateToggle(section, config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
+    local theme = self.Theme
     local toggle = {
         Name = config.Name or "Toggle",
         Default = config.Default or false,
         Flag = config.Flag,
         Callback = config.Callback or function() end,
-        Value = config.Default or false,
-        Disabled = config.Disabled or false,
-        Description = config.Description
+        Value = config.Default or false
     }
-
+    
     -- Container
     toggle.Container = Utility:Create("Frame", {
         Name = "Toggle_" .. toggle.Name,
-        Size = UDim2.new(1, 0, 0, toggle.Description and 55 or 35),
+        Size = UDim2.new(1, 0, 0, 35),
         BackgroundColor3 = theme.BgTertiary,
         BackgroundTransparency = 0.5,
         BorderSizePixel = 0,
         ZIndex = 6,
         Parent = section.Content
     })
-
-    Utility:AddCorner(toggle.Container, UDim.new(0, 6))
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = toggle.Container
+    })
+    
     -- Label
     toggle.Label = Utility:Create("TextLabel", {
         Name = "Label",
-        Size = UDim2.new(1, -60, 0, 20),
-        Position = UDim2.new(0, 10, 0, 5),
+        Size = UDim2.new(1, -60, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
         BackgroundTransparency = 1,
         Text = toggle.Name,
-        TextColor3 = toggle.Disabled and theme.TextDisabled or theme.TextPrimary,
+        TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 7,
         Parent = toggle.Container
     })
-
-    -- Description
-    if toggle.Description then
-        toggle.DescLabel = Utility:Create("TextLabel", {
-            Name = "Description",
-            Size = UDim2.new(1, -20, 0, 15),
-            Position = UDim2.new(0, 10, 0, 25),
-            BackgroundTransparency = 1,
-            Text = toggle.Description,
-            TextColor3 = theme.TextMuted,
-            TextSize = theme.FontSizes.Small,
-            Font = Enum.Font.Gotham,
-            TextXAlignment = Enum.TextXAlignment.Left,
-            TextWrapped = true,
-            ZIndex = 7,
-            Parent = toggle.Container
-        })
-    end
-
+    
     -- Toggle switch background
     toggle.SwitchBg = Utility:Create("Frame", {
         Name = "SwitchBg",
         Size = UDim2.new(0, 45, 0, 22),
-        Position = UDim2.new(1, -50, 0, toggle.Description and 16 or 6),
-        AnchorPoint = Vector2.new(0, 0),
+        Position = UDim2.new(1, -50, 0.5, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
         BackgroundColor3 = toggle.Value and theme.Success or theme.BgElevated,
         BorderSizePixel = 0,
         ZIndex = 7,
         Parent = toggle.Container
     })
-
-    Utility:AddCorner(toggle.SwitchBg, UDim.new(1, 0))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(1, 0),
+        Parent = toggle.SwitchBg
+    })
+    
     Utility:AddStroke(toggle.SwitchBg, theme.Border, 1, 0.7)
-
+    
     -- Toggle knob
     toggle.Knob = Utility:Create("Frame", {
         Name = "Knob",
@@ -2093,64 +1217,55 @@ function Library:_CreateToggle(section, config)
         ZIndex = 8,
         Parent = toggle.SwitchBg
     })
-
-    Utility:AddCorner(toggle.Knob, UDim.new(1, 0))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(1, 0),
+        Parent = toggle.Knob
+    })
+    
     Utility:AddShadow(toggle.Knob, theme.Shadow, 5, 0.5)
-
-    -- Set value function
+    
+    -- Toggle function
     function toggle:SetValue(value, skipCallback)
-        if toggle.Disabled then return end
-
         toggle.Value = value
-
+        
         Utility:Tween(toggle.SwitchBg, {
             BackgroundColor3 = value and theme.Success or theme.BgElevated
         }, 0.3)
-
+        
         Utility:Tween(toggle.Knob, {
             Position = value and UDim2.new(1, -20, 0.5, 0) or UDim2.new(0, 2, 0.5, 0)
         }, 0.3, Enum.EasingStyle.Quint)
-
+        
         if toggle.Flag then
             Library.Flags[toggle.Flag] = value
-            self._configDirty = true
         end
-
+        
         if not skipCallback then
             pcall(toggle.Callback, value)
         end
     end
-
+    
     -- Click handler
     toggle.Container.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 and not toggle.Disabled then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
             Utility:RippleEffect(toggle.Container, theme.Primary)
             toggle:SetValue(not toggle.Value)
         end
     end)
-
-    -- Hover effects
+    
+    -- Hover effect
     toggle.Container.MouseEnter:Connect(function()
-        if not toggle.Disabled then
-            Utility:Tween(toggle.Container, {BackgroundTransparency = 0.3}, 0.2)
-        end
+        Utility:Tween(toggle.Container, {BackgroundTransparency = 0.3}, 0.2)
     end)
-
+    
     toggle.Container.MouseLeave:Connect(function()
-        if not toggle.Disabled then
-            Utility:Tween(toggle.Container, {BackgroundTransparency = 0.5}, 0.2)
-        end
+        Utility:Tween(toggle.Container, {BackgroundTransparency = 0.5}, 0.2)
     end)
-
-    -- Disable/Enable methods
-    function toggle:SetDisabled(disabled)
-        toggle.Disabled = disabled
-        toggle.Label.TextColor3 = disabled and theme.TextDisabled or theme.TextPrimary
-        toggle.Container.BackgroundTransparency = disabled and 0.8 or 0.5
-    end
-
+    
     -- Tooltip method
     function toggle:AddTooltip(text)
+        -- Create tooltip (shown on hover)
         local tooltip = Utility:Create("Frame", {
             Name = "Tooltip",
             Size = UDim2.new(0, 0, 0, 25),
@@ -2162,10 +1277,14 @@ function Library:_CreateToggle(section, config)
             ZIndex = 15,
             Parent = toggle.Container
         })
-
-        Utility:AddCorner(tooltip, UDim.new(0, 4))
+        
+        Utility:Create("UICorner", {
+            CornerRadius = UDim.new(0, 4),
+            Parent = tooltip
+        })
+        
         Utility:AddStroke(tooltip, theme.Primary, 1, 0.5)
-
+        
         local tooltipLabel = Utility:Create("TextLabel", {
             Size = UDim2.new(1, -10, 1, 0),
             Position = UDim2.new(0, 5, 0, 0),
@@ -2177,71 +1296,56 @@ function Library:_CreateToggle(section, config)
             ZIndex = 16,
             Parent = tooltip
         })
-
+        
         local textSize = Utility:GetTextSize(text, theme.FontSizes.Small, Enum.Font.Gotham, Vector2.new(200, 25))
         tooltip.Size = UDim2.new(0, textSize.X + 15, 0, 25)
-
+        
         toggle.Container.MouseEnter:Connect(function()
-            if not toggle.Disabled then
-                tooltip.Visible = true
-                Utility:Tween(tooltip, {BackgroundTransparency = 0}, 0.2)
-            end
+            tooltip.Visible = true
+            Utility:Tween(tooltip, {BackgroundTransparency = 0}, 0.2)
         end)
-
+        
         toggle.Container.MouseLeave:Connect(function()
             tooltip.Visible = false
         end)
-
+        
         return toggle
     end
-
-    -- Register element
+    
+    -- Initialize
     if toggle.Flag then
         Library.Flags[toggle.Flag] = toggle.Value
         self.Elements[toggle.Flag] = toggle
     end
-
+    
     toggle:SetValue(toggle.Default, true)
-
+    
     return toggle
 end
 
--- Enhanced Button
-function Library:_CreateButton(section, config)
-    config = config or {}
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: BUTTON
+-- ═══════════════════════════════════════════════════════════════════════
 
-    local theme = self.CurrentTheme
+function Library:_CreateButton(section, config)
+    local theme = self.Theme
     local button = {
         Name = config.Name or "Button",
         Callback = config.Callback or function() end,
-        Variant = config.Variant or "Primary",
-        Size = config.Size or "Default",
-        Disabled = config.Disabled or false,
-        Loading = false
+        Variant = config.Variant or "Primary" -- Primary, Secondary, Danger, Ghost
     }
-
+    
     local variantColors = {
         Primary = theme.Primary,
         Secondary = theme.Secondary,
-        Success = theme.Success,
         Danger = theme.Danger,
-        Warning = theme.Warning,
-        Info = theme.Info,
         Ghost = theme.BgTertiary
     }
-
-    local sizeConfigs = {
-        Small = {Height = 30, FontSize = theme.FontSizes.Small},
-        Default = {Height = 35, FontSize = theme.FontSizes.Body},
-        Large = {Height = 45, FontSize = theme.FontSizes.Title}
-    }
-
-    local sizeConfig = sizeConfigs[button.Size] or sizeConfigs.Default
-
+    
     -- Container
     button.Container = Utility:Create("TextButton", {
         Name = "Button_" .. button.Name,
-        Size = UDim2.new(1, 0, 0, sizeConfig.Height),
+        Size = UDim2.new(1, 0, 0, 35),
         BackgroundColor3 = variantColors[button.Variant],
         BackgroundTransparency = button.Variant == "Ghost" and 0.3 or 0,
         BorderSizePixel = 0,
@@ -2250,13 +1354,16 @@ function Library:_CreateButton(section, config)
         ZIndex = 6,
         Parent = section.Content
     })
-
-    Utility:AddCorner(button.Container, UDim.new(0, 6))
-
-    if button.Variant ~= "Ghost" and theme.Shadows then
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = button.Container
+    })
+    
+    if button.Variant ~= "Ghost" then
         Utility:AddShadow(button.Container, variantColors[button.Variant], 10, 0.6)
     end
-
+    
     -- Label
     button.Label = Utility:Create("TextLabel", {
         Name = "Label",
@@ -2264,118 +1371,57 @@ function Library:_CreateButton(section, config)
         Position = UDim2.new(0, 10, 0, 0),
         BackgroundTransparency = 1,
         Text = button.Name,
-        TextColor3 = button.Disabled and theme.TextDisabled or theme.TextPrimary,
-        TextSize = sizeConfig.FontSize,
-        Font = button.Variant == "Ghost" and Enum.Font.GothamMedium or Enum.Font.GothamBold,
+        TextColor3 = theme.TextPrimary,
+        TextSize = theme.FontSizes.Body,
+        Font = Enum.Font.GothamBold,
         ZIndex = 7,
         Parent = button.Container
     })
-
-    -- Loading spinner
-    button.Spinner = Utility:Create("Frame", {
-        Name = "Spinner",
-        Size = UDim2.new(0, 16, 0, 16),
-        Position = UDim2.new(0, 10, 0.5, 0),
-        AnchorPoint = Vector2.new(0, 0.5),
-        BackgroundTransparency = 1,
-        Visible = false,
-        ZIndex = 8,
-        Parent = button.Container
-    })
-
-    -- Create spinner segments
-    for i = 1, 8 do
-        local segment = Utility:Create("Frame", {
-            Size = UDim2.new(0, 2, 0, 6),
-            Position = UDim2.new(0.5, 0, 0.5, -8),
-            AnchorPoint = Vector2.new(0.5, 1),
-            BackgroundColor3 = theme.TextPrimary,
-            BorderSizePixel = 0,
-            ZIndex = 9,
-            Parent = button.Spinner
-        })
-
-        Utility:AddCorner(segment, UDim.new(1, 0))
-
-        -- Animate spinner
-        Utility:Tween(segment, {
-            Rotation = 360
-        }, 1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, function()
-            if button.Loading then
-                Utility:Tween(segment, {Rotation = segment.Rotation + 360}, 1, Enum.EasingStyle.Linear)
-            end
-        end)
-    end
-
+    
     -- Click handler
     button.Container.MouseButton1Click:Connect(function()
-        if button.Disabled or button.Loading then return end
-
         Utility:RippleEffect(button.Container, Color3.fromRGB(255, 255, 255))
         pcall(button.Callback)
     end)
-
+    
     -- Hover effects
     button.Container.MouseEnter:Connect(function()
-        if button.Disabled or button.Loading then return end
-
         Utility:Tween(button.Container, {
-            Size = UDim2.new(1, 0, 0, sizeConfig.Height + 2)
+            Size = UDim2.new(1, 0, 0, 37)
         }, 0.2, Enum.EasingStyle.Quint)
-
+        
         if button.Variant == "Ghost" then
             Utility:Tween(button.Container, {BackgroundTransparency = 0}, 0.2)
         else
-            Utility:Tween(button.Container, {
-                BackgroundColor3 = Utility:LightenColor(variantColors[button.Variant], 0.2)
-            }, 0.2)
+            Utility:Tween(button.Container, {BackgroundColor3 = Color3.fromRGB(
+                math.min(255, variantColors[button.Variant].R * 255 + 20),
+                math.min(255, variantColors[button.Variant].G * 255 + 20),
+                math.min(255, variantColors[button.Variant].B * 255 + 20)
+            )}, 0.2)
         end
     end)
-
+    
     button.Container.MouseLeave:Connect(function()
-        if button.Disabled or button.Loading then return end
-
         Utility:Tween(button.Container, {
-            Size = UDim2.new(1, 0, 0, sizeConfig.Height)
+            Size = UDim2.new(1, 0, 0, 35)
         }, 0.2, Enum.EasingStyle.Quint)
-
+        
         if button.Variant == "Ghost" then
             Utility:Tween(button.Container, {BackgroundTransparency = 0.3}, 0.2)
         else
             Utility:Tween(button.Container, {BackgroundColor3 = variantColors[button.Variant]}, 0.2)
         end
     end)
-
-    -- Loading methods
-    function button:SetLoading(loading)
-        button.Loading = loading
-
-        if loading then
-            button.Spinner.Visible = true
-            button.Label.Visible = false
-            button.Container.BackgroundTransparency = 0.7
-        else
-            button.Spinner.Visible = false
-            button.Label.Visible = true
-            button.Container.BackgroundTransparency = button.Variant == "Ghost" and 0.3 or 0
-        end
-    end
-
-    -- Disable/Enable methods
-    function button:SetDisabled(disabled)
-        button.Disabled = disabled
-        button.Label.TextColor3 = disabled and theme.TextDisabled or theme.TextPrimary
-        button.Container.BackgroundTransparency = disabled and 0.8 or (button.Variant == "Ghost" and 0.3 or 0)
-    end
-
+    
     return button
 end
 
--- Enhanced Slider
-function Library:_CreateSlider(section, config)
-    config = config or {}
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: SLIDER
+-- ═══════════════════════════════════════════════════════════════════════
 
-    local theme = self.CurrentTheme
+function Library:_CreateSlider(section, config)
+    local theme = self.Theme
     local slider = {
         Name = config.Name or "Slider",
         Min = config.Min or 0,
@@ -2385,11 +1431,9 @@ function Library:_CreateSlider(section, config)
         Suffix = config.Suffix or "",
         Flag = config.Flag,
         Callback = config.Callback or function() end,
-        Value = config.Default or 50,
-        Disabled = config.Disabled or false,
-        Precision = config.Precision or 0
+        Value = config.Default or 50
     }
-
+    
     -- Container
     slider.Container = Utility:Create("Frame", {
         Name = "Slider_" .. slider.Name,
@@ -2400,9 +1444,12 @@ function Library:_CreateSlider(section, config)
         ZIndex = 6,
         Parent = section.Content
     })
-
-    Utility:AddCorner(slider.Container, UDim.new(0, 6))
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = slider.Container
+    })
+    
     -- Label
     slider.Label = Utility:Create("TextLabel", {
         Name = "Label",
@@ -2410,21 +1457,21 @@ function Library:_CreateSlider(section, config)
         Position = UDim2.new(0, 10, 0, 5),
         BackgroundTransparency = 1,
         Text = slider.Name,
-        TextColor3 = slider.Disabled and theme.TextDisabled or theme.TextPrimary,
+        TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 7,
         Parent = slider.Container
     })
-
+    
     -- Value label
     slider.ValueLabel = Utility:Create("TextLabel", {
         Name = "ValueLabel",
         Size = UDim2.new(0.4, -10, 0, 20),
         Position = UDim2.new(0.6, 0, 0, 5),
         BackgroundTransparency = 1,
-        Text = Utility:Round(slider.Value, slider.Precision) .. slider.Suffix,
+        Text = tostring(slider.Value) .. slider.Suffix,
         TextColor3 = theme.Primary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.GothamBold,
@@ -2432,7 +1479,7 @@ function Library:_CreateSlider(section, config)
         ZIndex = 7,
         Parent = slider.Container
     })
-
+    
     -- Slider track
     slider.Track = Utility:Create("Frame", {
         Name = "Track",
@@ -2443,10 +1490,12 @@ function Library:_CreateSlider(section, config)
         ZIndex = 7,
         Parent = slider.Container
     })
-
-    Utility:AddCorner(slider.Track, UDim.new(1, 0))
-    Utility:AddStroke(slider.Track, theme.Border, 1, 0.7)
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(1, 0),
+        Parent = slider.Track
+    })
+    
     -- Slider fill
     slider.Fill = Utility:Create("Frame", {
         Name = "Fill",
@@ -2456,13 +1505,17 @@ function Library:_CreateSlider(section, config)
         ZIndex = 8,
         Parent = slider.Track
     })
-
-    Utility:AddCorner(slider.Fill, UDim.new(1, 0))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(1, 0),
+        Parent = slider.Fill
+    })
+    
     Utility:AddGradient(slider.Fill, ColorSequence.new{
         ColorSequenceKeypoint.new(0, theme.Primary),
         ColorSequenceKeypoint.new(1, theme.Secondary)
     }, 90)
-
+    
     -- Slider knob
     slider.Knob = Utility:Create("Frame", {
         Name = "Knob",
@@ -2472,97 +1525,81 @@ function Library:_CreateSlider(section, config)
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0,
         ZIndex = 9,
-        Parent = slider.Track
+        Parent = slider.Fill
     })
-
-    Utility:AddCorner(slider.Knob, UDim.new(1, 0))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(1, 0),
+        Parent = slider.Knob
+    })
+    
     Utility:AddShadow(slider.Knob, theme.Shadow, 8, 0.4)
-
+    
     -- Set value function
     function slider:SetValue(value, skipCallback)
-        if slider.Disabled then return end
-
-        value = Utility:Clamp(value, slider.Min, slider.Max)
+        value = math.clamp(value, slider.Min, slider.Max)
         value = math.floor(value / slider.Increment + 0.5) * slider.Increment
         slider.Value = value
-
+        
         local percent = (value - slider.Min) / (slider.Max - slider.Min)
-
+        
         Utility:Tween(slider.Fill, {
             Size = UDim2.new(percent, 0, 1, 0)
         }, 0.2, Enum.EasingStyle.Quint)
-
-        Utility:Tween(slider.Knob, {
-            Position = UDim2.new(percent, 0, 0.5, 0)
-        }, 0.2, Enum.EasingStyle.Quint)
-
-        slider.ValueLabel.Text = Utility:Round(value, slider.Precision) .. slider.Suffix
-
+        
+        slider.ValueLabel.Text = tostring(value) .. slider.Suffix
+        
         if slider.Flag then
             Library.Flags[slider.Flag] = value
-            self._configDirty = true
         end
-
+        
         if not skipCallback then
             pcall(slider.Callback, value)
         end
     end
-
+    
     -- Dragging
     local dragging = false
-
+    
     slider.Track.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 and not slider.Disabled then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             Utility:Tween(slider.Knob, {Size = UDim2.new(0, 20, 0, 20)}, 0.2, Enum.EasingStyle.Back)
         end
     end)
-
+    
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
             Utility:Tween(slider.Knob, {Size = UDim2.new(0, 16, 0, 16)}, 0.2, Enum.EasingStyle.Quint)
         end
     end)
-
+    
     UserInputService.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local percent = Utility:Clamp((Mouse.X - slider.Track.AbsolutePosition.X) / slider.Track.AbsoluteSize.X, 0, 1)
+            local percent = math.clamp((Mouse.X - slider.Track.AbsolutePosition.X) / slider.Track.AbsoluteSize.X, 0, 1)
             local value = slider.Min + (slider.Max - slider.Min) * percent
             slider:SetValue(value)
         end
     end)
-
-    -- Disable/Enable methods
-    function slider:SetDisabled(disabled)
-        slider.Disabled = disabled
-        slider.Label.TextColor3 = disabled and theme.TextDisabled or theme.TextPrimary
-        slider.Container.BackgroundTransparency = disabled and 0.8 or 0.5
-    end
-
-    -- Range methods
-    function slider:SetRange(min, max)
-        slider.Min = min
-        slider.Max = max
-        slider:SetValue(Utility:Clamp(slider.Value, min, max))
-    end
-
-    -- Register element
+    
+    -- Initialize
     if slider.Flag then
         Library.Flags[slider.Flag] = slider.Value
         self.Elements[slider.Flag] = slider
     end
-
+    
     slider:SetValue(slider.Default, true)
-
+    
     return slider
 end
 
--- Enhanced Dropdown
-function Library:_CreateDropdown(section, config)
-    config = config or {}
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: DROPDOWN
+-- ═══════════════════════════════════════════════════════════════════════
 
-    local theme = self.CurrentTheme
+function Library:_CreateDropdown(section, config)
+    local theme = self.Theme
     local dropdown = {
         Name = config.Name or "Dropdown",
         Options = config.Options or {},
@@ -2571,11 +1608,9 @@ function Library:_CreateDropdown(section, config)
         Flag = config.Flag,
         Callback = config.Callback or function() end,
         Value = config.Multi and {} or (config.Default or ""),
-        IsOpen = false,
-        Disabled = config.Disabled or false,
-        MaxDisplay = config.MaxDisplay or 5
+        IsOpen = false
     }
-
+    
     -- Container
     dropdown.Container = Utility:Create("Frame", {
         Name = "Dropdown_" .. dropdown.Name,
@@ -2586,9 +1621,12 @@ function Library:_CreateDropdown(section, config)
         ZIndex = 6,
         Parent = section.Content
     })
-
-    Utility:AddCorner(dropdown.Container, UDim.new(0, 6))
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = dropdown.Container
+    })
+    
     -- Header button
     dropdown.Header = Utility:Create("TextButton", {
         Name = "Header",
@@ -2598,7 +1636,7 @@ function Library:_CreateDropdown(section, config)
         ZIndex = 7,
         Parent = dropdown.Container
     })
-
+    
     -- Label
     dropdown.Label = Utility:Create("TextLabel", {
         Name = "Label",
@@ -2606,14 +1644,14 @@ function Library:_CreateDropdown(section, config)
         Position = UDim2.new(0, 10, 0, 0),
         BackgroundTransparency = 1,
         Text = dropdown.Name,
-        TextColor3 = dropdown.Disabled and theme.TextDisabled or theme.TextPrimary,
+        TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 8,
         Parent = dropdown.Header
     })
-
+    
     -- Value label
     dropdown.ValueLabel = Utility:Create("TextLabel", {
         Name = "ValueLabel",
@@ -2629,7 +1667,7 @@ function Library:_CreateDropdown(section, config)
         ZIndex = 8,
         Parent = dropdown.Header
     })
-
+    
     -- Arrow icon
     dropdown.Arrow = Utility:Create("TextLabel", {
         Name = "Arrow",
@@ -2644,7 +1682,7 @@ function Library:_CreateDropdown(section, config)
         ZIndex = 8,
         Parent = dropdown.Header
     })
-
+    
     -- Options list container
     dropdown.OptionsList = Utility:Create("ScrollingFrame", {
         Name = "OptionsList",
@@ -2657,76 +1695,88 @@ function Library:_CreateDropdown(section, config)
         CanvasSize = UDim2.new(0, 0, 0, 0),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         Visible = false,
-        ZIndex = 100,
+        ZIndex = 10,
         Parent = dropdown.Container
     })
-
-    Utility:AddCorner(dropdown.OptionsList, UDim.new(0, 6))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = dropdown.OptionsList
+    })
+    
     Utility:AddStroke(dropdown.OptionsList, theme.Border, 1, 0.6)
     Utility:AddShadow(dropdown.OptionsList, theme.Shadow, 15, 0.5)
-
-    Utility:AddListLayout(dropdown.OptionsList, Enum.SortOrder.LayoutOrder, UDim.new(0, 2))
-    Utility:AddPadding(dropdown.OptionsList, UDim.new(0, 5))
-
+    
+    Utility:Create("UIListLayout", {
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 2),
+        Parent = dropdown.OptionsList
+    })
+    
+    Utility:Create("UIPadding", {
+        PaddingTop = UDim.new(0, 5),
+        PaddingBottom = UDim.new(0, 5),
+        PaddingLeft = UDim.new(0, 5),
+        PaddingRight = UDim.new(0, 5),
+        Parent = dropdown.OptionsList
+    })
+    
     -- Toggle dropdown
     function dropdown:Toggle()
-        if dropdown.Disabled then return end
-
         dropdown.IsOpen = not dropdown.IsOpen
-
+        
         if dropdown.IsOpen then
             dropdown.OptionsList.Visible = true
-            local listHeight = math.min(#dropdown.Options * 30 + 10, dropdown.MaxDisplay * 30 + 10)
-
+            local listHeight = math.min(#dropdown.Options * 30 + 10, 150)
+            
             Utility:Tween(dropdown.Container, {
                 Size = UDim2.new(1, 0, 0, 35 + listHeight + 5)
             }, 0.3, Enum.EasingStyle.Quint)
-
+            
             Utility:Tween(dropdown.OptionsList, {
                 Size = UDim2.new(1, 0, 0, listHeight)
             }, 0.3, Enum.EasingStyle.Quint)
-
+            
             Utility:Tween(dropdown.Arrow, {Rotation = 180}, 0.3, Enum.EasingStyle.Quint)
         else
             Utility:Tween(dropdown.Container, {
                 Size = UDim2.new(1, 0, 0, 35)
             }, 0.3, Enum.EasingStyle.Quint)
-
+            
             Utility:Tween(dropdown.OptionsList, {
                 Size = UDim2.new(1, 0, 0, 0)
             }, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out, function()
                 dropdown.OptionsList.Visible = false
             end)
-
+            
             Utility:Tween(dropdown.Arrow, {Rotation = 0}, 0.3, Enum.EasingStyle.Quint)
         end
     end
-
+    
     -- Set value function
     function dropdown:SetValue(value, skipCallback)
         if dropdown.Multi then
-            if Utility:FindInTable(dropdown.Value, value) then
-                table.remove(dropdown.Value, Utility:FindInTable(dropdown.Value, value))
+            if table.find(dropdown.Value, value) then
+                table.remove(dropdown.Value, table.find(dropdown.Value, value))
             else
                 table.insert(dropdown.Value, value)
             end
             dropdown.ValueLabel.Text = #dropdown.Value > 0 and #dropdown.Value .. " selected" or "None"
         else
             dropdown.Value = value
-            dropdown.ValueLabel.Text = Utility:TruncateText(tostring(value), 15)
+            dropdown.ValueLabel.Text = tostring(value)
             dropdown:Toggle()
         end
-
+        
         if dropdown.Flag then
             Library.Flags[dropdown.Flag] = dropdown.Value
-            self._configDirty = true
         end
-
+        
         if not skipCallback then
             pcall(dropdown.Callback, dropdown.Value)
         end
     end
-
+    
     -- Create options
     for _, option in ipairs(dropdown.Options) do
         local optionButton = Utility:Create("TextButton", {
@@ -2739,14 +1789,17 @@ function Library:_CreateDropdown(section, config)
             ZIndex = 11,
             Parent = dropdown.OptionsList
         })
-
-        Utility:AddCorner(optionButton, UDim.new(0, 4))
-
+        
+        Utility:Create("UICorner", {
+            CornerRadius = UDim.new(0, 4),
+            Parent = optionButton
+        })
+        
         local optionLabel = Utility:Create("TextLabel", {
             Size = UDim2.new(1, -10, 1, 0),
             Position = UDim2.new(0, 5, 0, 0),
             BackgroundTransparency = 1,
-            Text = tostring(option),
+            Text = option,
             TextColor3 = theme.TextPrimary,
             TextSize = theme.FontSizes.Small,
             Font = Enum.Font.Gotham,
@@ -2754,133 +1807,312 @@ function Library:_CreateDropdown(section, config)
             ZIndex = 12,
             Parent = optionButton
         })
-
+        
         optionButton.MouseButton1Click:Connect(function()
             dropdown:SetValue(option)
             Utility:RippleEffect(optionButton, theme.Primary)
         end)
-
+        
         optionButton.MouseEnter:Connect(function()
             Utility:Tween(optionButton, {BackgroundTransparency = 0}, 0.2)
         end)
-
+        
         optionButton.MouseLeave:Connect(function()
             Utility:Tween(optionButton, {BackgroundTransparency = 0.5}, 0.2)
         end)
     end
-
+    
     -- Header click
     dropdown.Header.MouseButton1Click:Connect(function()
         dropdown:Toggle()
     end)
-
+    
     -- Hover effect
     dropdown.Header.MouseEnter:Connect(function()
-        if not dropdown.Disabled then
-            Utility:Tween(dropdown.Container, {BackgroundTransparency = 0.3}, 0.2)
-        end
+        Utility:Tween(dropdown.Container, {BackgroundTransparency = 0.3}, 0.2)
     end)
-
+    
     dropdown.Header.MouseLeave:Connect(function()
-        if not dropdown.Disabled then
-            Utility:Tween(dropdown.Container, {BackgroundTransparency = 0.5}, 0.2)
-        end
+        Utility:Tween(dropdown.Container, {BackgroundTransparency = 0.5}, 0.2)
     end)
-
-    -- Disable/Enable methods
-    function dropdown:SetDisabled(disabled)
-        dropdown.Disabled = disabled
-        dropdown.Label.TextColor3 = disabled and theme.TextDisabled or theme.TextPrimary
-        dropdown.Container.BackgroundTransparency = disabled and 0.8 or 0.5
-    end
-
-    -- Options methods
-    function dropdown:AddOption(option)
-        table.insert(dropdown.Options, option)
-
-        -- Recreate options list
-        dropdown.OptionsList:ClearAllChildren()
-        Utility:AddListLayout(dropdown.OptionsList, Enum.SortOrder.LayoutOrder, UDim.new(0, 2))
-        Utility:AddPadding(dropdown.OptionsList, UDim.new(0, 5))
-
-        for _, opt in ipairs(dropdown.Options) do
-            local optionButton = Utility:Create("TextButton", {
-                Name = "Option_" .. opt,
-                Size = UDim2.new(1, -10, 0, 25),
-                BackgroundColor3 = theme.BgTertiary,
-                BackgroundTransparency = 0.5,
-                BorderSizePixel = 0,
-                Text = "",
-                ZIndex = 11,
-                Parent = dropdown.OptionsList
-            })
-
-            Utility:AddCorner(optionButton, UDim.new(0, 4))
-
-            local optionLabel = Utility:Create("TextLabel", {
-                Size = UDim2.new(1, -10, 1, 0),
-                Position = UDim2.new(0, 5, 0, 0),
-                BackgroundTransparency = 1,
-                Text = tostring(opt),
-                TextColor3 = theme.TextPrimary,
-                TextSize = theme.FontSizes.Small,
-                Font = Enum.Font.Gotham,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                ZIndex = 12,
-                Parent = optionButton
-            })
-
-            optionButton.MouseButton1Click:Connect(function()
-                dropdown:SetValue(opt)
-                Utility:RippleEffect(optionButton, theme.Primary)
-            end)
-
-            optionButton.MouseEnter:Connect(function()
-                Utility:Tween(optionButton, {BackgroundTransparency = 0}, 0.2)
-            end)
-
-            optionButton.MouseLeave:Connect(function()
-                Utility:Tween(optionButton, {BackgroundTransparency = 0.5}, 0.2)
-            end)
-        end
-    end
-
-    function dropdown:RemoveOption(option)
-        local index = Utility:FindInTable(dropdown.Options, option)
-        if index then
-            table.remove(dropdown.Options, index)
-            -- Note: Would need to recreate the options list here
-        end
-    end
-
-    -- Register element
+    
+    -- Initialize
     if dropdown.Flag then
         Library.Flags[dropdown.Flag] = dropdown.Value
         self.Elements[dropdown.Flag] = dropdown
     end
-
+    
     if not dropdown.Multi and dropdown.Default then
         dropdown:SetValue(dropdown.Default, true)
     end
-
+    
     return dropdown
 end
 
--- Enhanced Color Picker
-function Library:_CreateColorPicker(section, config)
-    config = config or {}
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: INPUT
+-- ═══════════════════════════════════════════════════════════════════════
 
-    local theme = self.CurrentTheme
+function Library:_CreateInput(section, config)
+    local theme = self.Theme
+    local input = {
+        Name = config.Name or "Input",
+        Default = config.Default or "",
+        Placeholder = config.Placeholder or "Enter text...",
+        Numeric = config.Numeric or false,
+        Flag = config.Flag,
+        Callback = config.Callback or function() end,
+        Value = config.Default or ""
+    }
+    
+    -- Container
+    input.Container = Utility:Create("Frame", {
+        Name = "Input_" .. input.Name,
+        Size = UDim2.new(1, 0, 0, 60),
+        BackgroundColor3 = theme.BgTertiary,
+        BackgroundTransparency = 0.5,
+        BorderSizePixel = 0,
+        ZIndex = 6,
+        Parent = section.Content
+    })
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = input.Container
+    })
+    
+    -- Label
+    input.Label = Utility:Create("TextLabel", {
+        Name = "Label",
+        Size = UDim2.new(1, -20, 0, 20),
+        Position = UDim2.new(0, 10, 0, 5),
+        BackgroundTransparency = 1,
+        Text = input.Name,
+        TextColor3 = theme.TextPrimary,
+        TextSize = theme.FontSizes.Body,
+        Font = Enum.Font.Gotham,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        ZIndex = 7,
+        Parent = input.Container
+    })
+    
+    -- Input box
+    input.Box = Utility:Create("TextBox", {
+        Name = "Box",
+        Size = UDim2.new(1, -20, 0, 28),
+        Position = UDim2.new(0, 10, 1, -33),
+        BackgroundColor3 = theme.BgElevated,
+        BorderSizePixel = 0,
+        PlaceholderText = input.Placeholder,
+        PlaceholderColor3 = theme.TextMuted,
+        Text = input.Value,
+        TextColor3 = theme.TextPrimary,
+        TextSize = theme.FontSizes.Small,
+        Font = Enum.Font.Gotham,
+        ClearTextOnFocus = false,
+        ZIndex = 7,
+        Parent = input.Container
+    })
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 4),
+        Parent = input.Box
+    })
+    
+    Utility:AddStroke(input.Box, theme.Border, 1, 0.7)
+    
+    Utility:Create("UIPadding", {
+        PaddingLeft = UDim.new(0, 8),
+        PaddingRight = UDim.new(0, 8),
+        Parent = input.Box
+    })
+    
+    -- Set value function
+    function input:SetValue(value, skipCallback)
+        if input.Numeric then
+            value = tonumber(value) or 0
+        end
+        input.Value = value
+        input.Box.Text = tostring(value)
+        
+        if input.Flag then
+            Library.Flags[input.Flag] = value
+        end
+        
+        if not skipCallback then
+            pcall(input.Callback, value)
+        end
+    end
+    
+    -- Focus effects
+    input.Box.Focused:Connect(function()
+        Utility:Tween(input.Box, {BackgroundColor3 = theme.BgSecondary}, 0.2)
+        for _, stroke in ipairs(input.Box:GetChildren()) do
+            if stroke:IsA("UIStroke") then
+                Utility:Tween(stroke, {Color = theme.Primary, Transparency = 0.3}, 0.2)
+            end
+        end
+    end)
+    
+    input.Box.FocusLost:Connect(function(enterPressed)
+        Utility:Tween(input.Box, {BackgroundColor3 = theme.BgElevated}, 0.2)
+        for _, stroke in ipairs(input.Box:GetChildren()) do
+            if stroke:IsA("UIStroke") then
+                Utility:Tween(stroke, {Color = theme.Border, Transparency = 0.7}, 0.2)
+            end
+        end
+        
+        if enterPressed then
+            input:SetValue(input.Box.Text)
+        end
+    end)
+    
+    -- Initialize
+    if input.Flag then
+        Library.Flags[input.Flag] = input.Value
+        self.Elements[input.Flag] = input
+    end
+    
+    return input
+end
+
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: KEYBIND
+-- ═══════════════════════════════════════════════════════════════════════
+
+function Library:_CreateKeybind(section, config)
+    local theme = self.Theme
+    local keybind = {
+        Name = config.Name or "Keybind",
+        Default = config.Default or Enum.KeyCode.Unknown,
+        Flag = config.Flag,
+        Callback = config.Callback or function() end,
+        Value = config.Default or Enum.KeyCode.Unknown,
+        Listening = false
+    }
+    
+    -- Container
+    keybind.Container = Utility:Create("Frame", {
+        Name = "Keybind_" .. keybind.Name,
+        Size = UDim2.new(1, 0, 0, 35),
+        BackgroundColor3 = theme.BgTertiary,
+        BackgroundTransparency = 0.5,
+        BorderSizePixel = 0,
+        ZIndex = 6,
+        Parent = section.Content
+    })
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = keybind.Container
+    })
+    
+    -- Label
+    keybind.Label = Utility:Create("TextLabel", {
+        Name = "Label",
+        Size = UDim2.new(1, -100, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
+        BackgroundTransparency = 1,
+        Text = keybind.Name,
+        TextColor3 = theme.TextPrimary,
+        TextSize = theme.FontSizes.Body,
+        Font = Enum.Font.Gotham,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        ZIndex = 7,
+        Parent = keybind.Container
+    })
+    
+    -- Keybind button
+    keybind.Button = Utility:Create("TextButton", {
+        Name = "Button",
+        Size = UDim2.new(0, 80, 0, 25),
+        Position = UDim2.new(1, -85, 0.5, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
+        BackgroundColor3 = theme.BgElevated,
+        BorderSizePixel = 0,
+        Text = keybind.Value.Name,
+        TextColor3 = theme.TextPrimary,
+        TextSize = theme.FontSizes.Small,
+        Font = Enum.Font.Gotham,
+        ZIndex = 7,
+        Parent = keybind.Container
+    })
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 4),
+        Parent = keybind.Button
+    })
+    
+    Utility:AddStroke(keybind.Button, theme.Border, 1, 0.7)
+    
+    -- Set value function
+    function keybind:SetValue(keyCode, skipCallback)
+        keybind.Value = keyCode
+        keybind.Button.Text = keyCode.Name
+        
+        if keybind.Flag then
+            Library.Flags[keybind.Flag] = keyCode
+        end
+        
+        if not skipCallback then
+            pcall(keybind.Callback, keyCode)
+        end
+    end
+    
+    -- Listen for key
+    keybind.Button.MouseButton1Click:Connect(function()
+        keybind.Listening = true
+        keybind.Button.Text = "..."
+        Utility:Tween(keybind.Button, {BackgroundColor3 = theme.Primary}, 0.2)
+    end)
+    
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if keybind.Listening and not gameProcessed then
+            if input.UserInputType == Enum.UserInputType.Keyboard then
+                keybind:SetValue(input.KeyCode)
+                keybind.Listening = false
+                Utility:Tween(keybind.Button, {BackgroundColor3 = theme.BgElevated}, 0.2)
+            end
+        end
+    end)
+    
+    -- Hover effects
+    keybind.Button.MouseEnter:Connect(function()
+        if not keybind.Listening then
+            Utility:Tween(keybind.Button, {BackgroundColor3 = theme.BgSecondary}, 0.2)
+        end
+    end)
+    
+    keybind.Button.MouseLeave:Connect(function()
+        if not keybind.Listening then
+            Utility:Tween(keybind.Button, {BackgroundColor3 = theme.BgElevated}, 0.2)
+        end
+    end)
+    
+    -- Initialize
+    if keybind.Flag then
+        Library.Flags[keybind.Flag] = keybind.Value
+        self.Elements[keybind.Flag] = keybind
+    end
+    
+    return keybind
+end
+
+-- ═══════════════════════════════════════════════════════════════════════
+-- 🎛️ COMPONENTS: COLOR PICKER
+-- ═══════════════════════════════════════════════════════════════════════
+
+function Library:_CreateColorPicker(section, config)
+    local theme = self.Theme
     local colorPicker = {
         Name = config.Name or "Color Picker",
         Default = config.Default or Color3.fromRGB(255, 255, 255),
         Flag = config.Flag,
         Callback = config.Callback or function() end,
         Value = config.Default or Color3.fromRGB(255, 255, 255),
-        IsOpen = false,
-        Disabled = config.Disabled or false
+        IsOpen = false
     }
-
+    
     -- Container
     colorPicker.Container = Utility:Create("Frame", {
         Name = "ColorPicker_" .. colorPicker.Name,
@@ -2891,9 +2123,12 @@ function Library:_CreateColorPicker(section, config)
         ZIndex = 6,
         Parent = section.Content
     })
-
-    Utility:AddCorner(colorPicker.Container, UDim.new(0, 6))
-
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = colorPicker.Container
+    })
+    
     -- Label
     colorPicker.Label = Utility:Create("TextLabel", {
         Name = "Label",
@@ -2901,14 +2136,14 @@ function Library:_CreateColorPicker(section, config)
         Position = UDim2.new(0, 10, 0, 0),
         BackgroundTransparency = 1,
         Text = colorPicker.Name,
-        TextColor3 = colorPicker.Disabled and theme.TextDisabled or theme.TextPrimary,
+        TextColor3 = theme.TextPrimary,
         TextSize = theme.FontSizes.Body,
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 7,
         Parent = colorPicker.Container
     })
-
+    
     -- Color preview button
     colorPicker.Preview = Utility:Create("TextButton", {
         Name = "Preview",
@@ -2921,44 +2156,50 @@ function Library:_CreateColorPicker(section, config)
         ZIndex = 7,
         Parent = colorPicker.Container
     })
-
-    Utility:AddCorner(colorPicker.Preview, UDim.new(0, 4))
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 4),
+        Parent = colorPicker.Preview
+    })
+    
     Utility:AddStroke(colorPicker.Preview, theme.Border, 1, 0.7)
-
-    -- Color picker panel
+    
+    -- Color picker panel (simplified)
     colorPicker.Panel = Utility:Create("Frame", {
         Name = "Panel",
-        Size = UDim2.new(0, 220, 0, 0),
-        Position = UDim2.new(1, -225, 1, 5),
+        Size = UDim2.new(0, 200, 0, 0),
+        Position = UDim2.new(1, -205, 0, 0),
         BackgroundColor3 = theme.BgElevated,
         BorderSizePixel = 0,
         Visible = false,
         ClipsDescendants = true,
-        ZIndex = 100,
-        Parent = section.Content
+        ZIndex = 10,
+        Parent = colorPicker.Container
     })
-
-    Utility:AddCorner(colorPicker.Panel, theme.CornerRadius)
+    
+    Utility:Create("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+        Parent = colorPicker.Panel
+    })
+    
     Utility:AddStroke(colorPicker.Panel, theme.Border, 1, 0.6)
     Utility:AddShadow(colorPicker.Panel, theme.Shadow, 15, 0.5)
-
-    -- RGB Sliders with input boxes
+    
+    -- RGB Sliders (simplified version)
     local rgbSliders = {}
     local colors = {"R", "G", "B"}
-    local rgbValues = {R = math.floor(colorPicker.Value.R * 255), G = math.floor(colorPicker.Value.G * 255), B = math.floor(colorPicker.Value.B * 255)}
-
+    
     for i, color in ipairs(colors) do
         local sliderFrame = Utility:Create("Frame", {
-            Size = UDim2.new(1, -20, 0, 40),
-            Position = UDim2.new(0, 10, 0, 10 + (i-1) * 45),
+            Size = UDim2.new(1, -20, 0, 30),
+            Position = UDim2.new(0, 10, 0, 10 + (i-1) * 35),
             BackgroundTransparency = 1,
             ZIndex = 11,
             Parent = colorPicker.Panel
         })
-
+        
         local label = Utility:Create("TextLabel", {
-            Size = UDim2.new(0, 15, 0, 15),
-            Position = UDim2.new(0, 0, 0, 0),
+            Size = UDim2.new(0, 15, 1, 0),
             BackgroundTransparency = 1,
             Text = color,
             TextColor3 = theme.TextPrimary,
@@ -2967,440 +2208,113 @@ function Library:_CreateColorPicker(section, config)
             ZIndex = 12,
             Parent = sliderFrame
         })
-
-        local inputBox = Utility:Create("TextBox", {
-            Size = UDim2.new(0, 45, 0, 20),
-            Position = UDim2.new(1, -45, 0, 0),
-            BackgroundColor3 = theme.BgSecondary,
-            BorderSizePixel = 0,
-            Text = tostring(rgbValues[color]),
-            TextColor3 = theme.TextPrimary,
+        
+        local valueLabel = Utility:Create("TextLabel", {
+            Size = UDim2.new(0, 30, 1, 0),
+            Position = UDim2.new(1, -30, 0, 0),
+            BackgroundTransparency = 1,
+            Text = "255",
+            TextColor3 = theme.TextSecondary,
             TextSize = theme.FontSizes.Small,
             Font = Enum.Font.Gotham,
+            TextXAlignment = Enum.TextXAlignment.Right,
             ZIndex = 12,
             Parent = sliderFrame
         })
-
-        Utility:AddCorner(inputBox, UDim.new(0, 3))
-        Utility:AddStroke(inputBox, theme.Border, 1, 0.7)
-
-        local rgbTrack = Utility:Create("Frame", {
-            Size = UDim2.new(1, -65, 0, 6),
-            Position = UDim2.new(0, 20, 1, -13),
-            BackgroundColor3 = theme.BgSecondary,
-            BorderSizePixel = 0,
-            ZIndex = 11,
-            Parent = sliderFrame
-        })
-
-        Utility:AddCorner(rgbTrack, UDim.new(1, 0))
-
-        local rgbFill = Utility:Create("Frame", {
-            Size = UDim2.new((rgbValues[color] / 255), 0, 1, 0),
-            BackgroundColor3 = color == "R" and Color3.fromRGB(255, 0, 0) or (color == "G" and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 255)),
-            BorderSizePixel = 0,
-            ZIndex = 12,
-            Parent = rgbTrack
-        })
-
-        Utility:AddCorner(rgbFill, UDim.new(1, 0))
-
-        rgbSliders[color] = {Frame = sliderFrame, InputBox = inputBox, Fill = rgbFill, Track = rgbTrack}
+        
+        rgbSliders[color] = {Frame = sliderFrame, ValueLabel = valueLabel}
     end
-
-    -- Function to update color from RGB inputs
-    local function updateColorFromRGB()
-        local r = Utility:Clamp(tonumber(rgbSliders["R"].InputBox.Text) or 255, 0, 255)
-        local g = Utility:Clamp(tonumber(rgbSliders["G"].InputBox.Text) or 255, 0, 255)
-        local b = Utility:Clamp(tonumber(rgbSliders["B"].InputBox.Text) or 255, 0, 255)
-
-        colorPicker:SetValue(Color3.fromRGB(r, g, b))
-    end
-
-    -- Handle RGB input changes
-    for _, color in ipairs(colors) do
-        rgbSliders[color].InputBox.FocusLost:Connect(function()
-            local value = Utility:Clamp(tonumber(rgbSliders[color].InputBox.Text) or 0, 0, 255)
-            rgbSliders[color].InputBox.Text = tostring(value)
-            rgbValues[color] = value
-            rgbSliders[color].Fill.Size = UDim2.new((value / 255), 0, 1, 0)
-            updateColorFromRGB()
-        end)
-
-        rgbSliders[color].InputBox.Changed:Connect(function()
-            local value = Utility:Clamp(tonumber(rgbSliders[color].InputBox.Text) or 0, 0, 255)
-            rgbSliders[color].Fill.Size = UDim2.new((value / 255), 0, 1, 0)
-        end)
-
-        -- Handle track clicks
-        rgbSliders[color].Track.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local percent = Utility:Clamp((Mouse.X - rgbSliders[color].Track.AbsolutePosition.X) / rgbSliders[color].Track.AbsoluteSize.X, 0, 1)
-                local value = math.floor(percent * 255)
-                rgbSliders[color].InputBox.Text = tostring(value)
-                rgbValues[color] = value
-                rgbSliders[color].Fill.Size = UDim2.new(percent, 0, 1, 0)
-                updateColorFromRGB()
-            end
-        end)
-    end
-
+    
     -- Toggle panel
     function colorPicker:Toggle()
-        if colorPicker.Disabled then return end
-
         colorPicker.IsOpen = not colorPicker.IsOpen
-
+        
         if colorPicker.IsOpen then
             colorPicker.Panel.Visible = true
-            Utility:Tween(colorPicker.Panel, {Size = UDim2.new(0, 220, 0, 160)}, 0.3, Enum.EasingStyle.Quint)
+            Utility:Tween(colorPicker.Panel, {Size = UDim2.new(0, 200, 0, 120)}, 0.3, Enum.EasingStyle.Quint)
         else
-            Utility:Tween(colorPicker.Panel, {Size = UDim2.new(0, 220, 0, 0)}, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out, function()
+            Utility:Tween(colorPicker.Panel, {Size = UDim2.new(0, 200, 0, 0)}, 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out, function()
                 colorPicker.Panel.Visible = false
             end)
         end
     end
-
+    
     -- Set value function
     function colorPicker:SetValue(color, skipCallback)
         colorPicker.Value = color
         colorPicker.Preview.BackgroundColor3 = color
-
-        -- Update RGB inputs
-        rgbSliders["R"].InputBox.Text = tostring(math.floor(color.R * 255))
-        rgbSliders["G"].InputBox.Text = tostring(math.floor(color.G * 255))
-        rgbSliders["B"].InputBox.Text = tostring(math.floor(color.B * 255))
-
-        -- Update RGB fills
-        rgbSliders["R"].Fill.Size = UDim2.new(color.R, 0, 1, 0)
-        rgbSliders["G"].Fill.Size = UDim2.new(color.G, 0, 1, 0)
-        rgbSliders["B"].Fill.Size = UDim2.new(color.B, 0, 1, 0)
-
+        
+        -- Update RGB labels
+        rgbSliders["R"].ValueLabel.Text = tostring(math.floor(color.R * 255))
+        rgbSliders["G"].ValueLabel.Text = tostring(math.floor(color.G * 255))
+        rgbSliders["B"].ValueLabel.Text = tostring(math.floor(color.B * 255))
+        
         if colorPicker.Flag then
             Library.Flags[colorPicker.Flag] = color
-            self._configDirty = true
         end
-
+        
         if not skipCallback then
             pcall(colorPicker.Callback, color)
         end
     end
-
+    
     -- Preview click
     colorPicker.Preview.MouseButton1Click:Connect(function()
         colorPicker:Toggle()
     end)
-
+    
     -- Hover effect
     colorPicker.Preview.MouseEnter:Connect(function()
-        if not colorPicker.Disabled then
-            Utility:Tween(colorPicker.Preview, {Size = UDim2.new(0, 43, 0, 28)}, 0.2, Enum.EasingStyle.Quint)
-        end
+        Utility:Tween(colorPicker.Preview, {Size = UDim2.new(0, 43, 0, 28)}, 0.2, Enum.EasingStyle.Quint)
     end)
-
+    
     colorPicker.Preview.MouseLeave:Connect(function()
-        if not colorPicker.Disabled then
-            Utility:Tween(colorPicker.Preview, {Size = UDim2.new(0, 40, 0, 25)}, 0.2, Enum.EasingStyle.Quint)
-        end
+        Utility:Tween(colorPicker.Preview, {Size = UDim2.new(0, 40, 0, 25)}, 0.2, Enum.EasingStyle.Quint)
     end)
-
-    -- Disable/Enable methods
-    function colorPicker:SetDisabled(disabled)
-        colorPicker.Disabled = disabled
-        colorPicker.Label.TextColor3 = disabled and theme.TextDisabled or theme.TextPrimary
-        colorPicker.Container.BackgroundTransparency = disabled and 0.8 or 0.5
-    end
-
-    -- Register element
+    
+    -- Initialize
     if colorPicker.Flag then
         Library.Flags[colorPicker.Flag] = colorPicker.Value
         self.Elements[colorPicker.Flag] = colorPicker
     end
-
+    
     colorPicker:SetValue(colorPicker.Default, true)
-
+    
     return colorPicker
 end
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 🆕 NEW COMPONENTS
+-- 🎛️ COMPONENTS: LABEL
 -- ═══════════════════════════════════════════════════════════════════════
 
--- Progress Bar Component
-function Library:_CreateProgressBar(section, config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
-    local progressBar = {
-        Name = config.Name or "Progress Bar",
-        Value = config.Value or 0,
-        Max = config.Max or 100,
-        ShowPercentage = config.ShowPercentage ~= false,
-        Color = config.Color or theme.Primary,
-        Animated = config.Animated ~= false
-    }
-
-    -- Container
-    progressBar.Container = Utility:Create("Frame", {
-        Name = "ProgressBar_" .. progressBar.Name,
-        Size = UDim2.new(1, 0, 0, 25),
-        BackgroundColor3 = theme.BgTertiary,
-        BackgroundTransparency = 0.5,
-        BorderSizePixel = 0,
-        ZIndex = 6,
-        Parent = section.Content
-    })
-
-    Utility:AddCorner(progressBar.Container, UDim.new(0, 6))
-    Utility:AddStroke(progressBar.Container, theme.Border, 1, 0.7)
-
-    -- Progress fill
-    progressBar.Fill = Utility:Create("Frame", {
-        Name = "Fill",
-        Size = UDim2.new(0, 0, 1, 0),
-        BackgroundColor3 = progressBar.Color,
-        BorderSizePixel = 0,
-        ZIndex = 7,
-        Parent = progressBar.Container
-    })
-
-    Utility:AddCorner(progressBar.Fill, UDim.new(0, 6))
-    Utility:AddGradient(progressBar.Fill, ColorSequence.new{
-        ColorSequenceKeypoint.new(0, progressBar.Color),
-        ColorSequenceKeypoint.new(1, Utility:LightenColor(progressBar.Color, 0.3))
-    }, 90)
-
-    -- Label
-    if progressBar.ShowPercentage then
-        progressBar.Label = Utility:Create("TextLabel", {
-            Name = "Label",
-            Size = UDim2.new(1, 0, 1, 0),
-            BackgroundTransparency = 1,
-            Text = progressBar.Name .. " - " .. math.floor((progressBar.Value / progressBar.Max) * 100) .. "%",
-            TextColor3 = theme.TextPrimary,
-            TextSize = theme.FontSizes.Small,
-            Font = Enum.Font.Gotham,
-            ZIndex = 8,
-            Parent = progressBar.Container
-        })
-    end
-
-    -- Set value function
-    function progressBar:SetValue(value)
-        progressBar.Value = Utility:Clamp(value, 0, progressBar.Max)
-        local percent = progressBar.Value / progressBar.Max
-
-        if progressBar.Animated then
-            Utility:Tween(progressBar.Fill, {
-                Size = UDim2.new(percent, 0, 1, 0)
-            }, 0.5, Enum.EasingStyle.Quint)
-        else
-            progressBar.Fill.Size = UDim2.new(percent, 0, 1, 0)
-        end
-
-        if progressBar.Label then
-            progressBar.Label.Text = progressBar.Name .. " - " .. math.floor(percent * 100) .. "%"
-        end
-    end
-
-    -- Set color function
-    function progressBar:SetColor(color)
-        progressBar.Color = color
-        progressBar.Fill.BackgroundColor3 = color
-        Utility:AddGradient(progressBar.Fill, ColorSequence.new{
-            ColorSequenceKeypoint.new(0, color),
-            ColorSequenceKeypoint.new(1, Utility:LightenColor(color, 0.3))
-        }, 90)
-    end
-
-    progressBar:SetValue(progressBar.Value)
-
-    return progressBar
-end
-
--- Spinner Component
-function Library:_CreateSpinner(section, config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
-    local spinner = {
-        Name = config.Name or "Spinner",
-        Size = config.Size or "Default",
-        Color = config.Color or theme.Primary,
-        Speed = config.Speed or 1
-    }
-
-    local sizeConfigs = {
-        Small = 16,
-        Default = 24,
-        Large = 32
-    }
-
-    local spinnerSize = sizeConfigs[spinner.Size] or sizeConfigs.Default
-
-    -- Container
-    spinner.Container = Utility:Create("Frame", {
-        Name = "Spinner_" .. spinner.Name,
-        Size = UDim2.new(0, spinnerSize, 0, spinnerSize),
-        BackgroundTransparency = 1,
-        ZIndex = 6,
-        Parent = section.Content
-    })
-
-    -- Create spinner segments
-    spinner.Segments = {}
-    for i = 1, 8 do
-        local segment = Utility:Create("Frame", {
-            Size = UDim2.new(0, 2, 0, math.floor(spinnerSize * 0.3)),
-            Position = UDim2.new(0.5, 0, 0.5, -spinnerSize * 0.4),
-            AnchorPoint = Vector2.new(0.5, 1),
-            BackgroundColor3 = spinner.Color,
-            BorderSizePixel = 0,
-            ZIndex = 7,
-            Parent = spinner.Container
-        })
-
-        Utility:AddCorner(segment, UDim.new(1, 0))
-
-        -- Stagger the animation
-        task.delay((i - 1) * 0.1, function()
-            while segment:IsDescendantOf(spinner.Container) do
-                Utility:Tween(segment, {
-                    BackgroundTransparency = 0.3
-                }, spinner.Speed * 0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out):Wait()
-
-                Utility:Tween(segment, {
-                    BackgroundTransparency = 1
-                }, spinner.Speed * 0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In):Wait()
-            end
-        end)
-
-        table.insert(spinner.Segments, segment)
-    end
-
-    -- Rotate the entire spinner
-    function spinner:Start()
-        if spinner._rotationConnection then return end
-
-        spinner._rotationConnection = RunService.RenderStepped:Connect(function(deltaTime)
-            spinner.Container.Rotation = spinner.Container.Rotation + (360 * deltaTime * spinner.Speed)
-        end)
-    end
-
-    function spinner:Stop()
-        if spinner._rotationConnection then
-            spinner._rotationConnection:Disconnect()
-            spinner._rotationConnection = nil
-        end
-        spinner.Container.Rotation = 0
-    end
-
-    -- Set color function
-    function spinner:SetColor(color)
-        spinner.Color = color
-        for _, segment in ipairs(spinner.Segments) do
-            segment.BackgroundColor3 = color
-        end
-    end
-
-    spinner:Start()
-
-    return spinner
-end
-
--- Paragraph Component
-function Library:_CreateParagraph(section, config)
-    config = config or {}
-
-    local theme = self.CurrentTheme
-    local paragraph = {
-        Name = config.Name or "Paragraph",
-        Text = config.Text or "",
-        Size = config.Size or "Default"
-    }
-
-    local sizeConfigs = {
-        Small = {Height = 40, FontSize = theme.FontSizes.Small},
-        Default = {Height = 60, FontSize = theme.FontSizes.Body},
-        Large = {Height = 80, FontSize = theme.FontSizes.Title}
-    }
-
-    local sizeConfig = sizeConfigs[paragraph.Size] or sizeConfigs.Default
-
-    -- Container
-    paragraph.Container = Utility:Create("Frame", {
-        Name = "Paragraph_" .. paragraph.Name,
-        Size = UDim2.new(1, 0, 0, sizeConfig.Height),
-        BackgroundColor3 = theme.BgTertiary,
-        BackgroundTransparency = 0.5,
-        BorderSizePixel = 0,
-        ZIndex = 6,
-        Parent = section.Content
-    })
-
-    Utility:AddCorner(paragraph.Container, UDim.new(0, 6))
-
-    -- Text label
-    paragraph.Label = Utility:Create("TextLabel", {
+function Library:_CreateLabel(section, text)
+    local theme = self.Theme
+    
+    local label = Utility:Create("TextLabel", {
         Name = "Label",
-        Size = UDim2.new(1, -20, 1, 0),
-        Position = UDim2.new(0, 10, 0, 0),
+        Size = UDim2.new(1, 0, 0, 25),
         BackgroundTransparency = 1,
-        Text = paragraph.Text,
+        Text = text,
         TextColor3 = theme.TextSecondary,
-        TextSize = sizeConfig.FontSize,
+        TextSize = theme.FontSizes.Small,
         Font = Enum.Font.Gotham,
-        TextWrapped = true,
         TextXAlignment = Enum.TextXAlignment.Left,
-        ZIndex = 7,
-        Parent = paragraph.Container
+        TextWrapped = true,
+        ZIndex = 6,
+        Parent = section.Content
     })
-
-    -- Set text function
-    function paragraph:SetText(text)
-        paragraph.Text = text
-        paragraph.Label.Text = text
-    end
-
-    return paragraph
+    
+    Utility:Create("UIPadding", {
+        PaddingLeft = UDim.new(0, 10),
+        PaddingRight = UDim.new(0, 10),
+        Parent = label
+    })
+    
+    return label
 end
 
 -- ═══════════════════════════════════════════════════════════════════════
--- 🧹 CLEANUP & DESTRUCTION
--- ═══════════════════════════════════════════════════════════════════════
-
-function Library:Destroy()
-    -- Disconnect all connections
-    for _, connection in ipairs(self.Connections) do
-        if typeof(connection) == "RBXScriptConnection" and connection.Connected then
-            connection:Disconnect()
-        end
-    end
-
-    -- Destroy all animations
-    for _, anim in ipairs(self.Animations) do
-        if anim then
-            anim:Destroy()
-        end
-    end
-
-    -- Clear flags
-    Library.Flags = {}
-
-    -- Destroy UI
-    if self.ScreenGui then
-        self.ScreenGui:Destroy()
-    end
-
-    -- Remove from instances
-    Library.Instances[self] = nil
-
-    -- Trigger destruction callback
-    self:_TriggerCallbacks("Destroyed")
-end
-
--- ═══════════════════════════════════════════════════════════════════════
--- 📤 RETURN ENHANCED LIBRARY
+-- 🏁 RETURN LIBRARY
 -- ═══════════════════════════════════════════════════════════════════════
 
 return Library
