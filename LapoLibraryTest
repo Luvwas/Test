@@ -1,7 +1,3 @@
--- ═══════════════════════════════════════════════════════════════════════
--- 🔧 SERVICES & DEPENDENCIES
--- ═══════════════════════════════════════════════════════════════════════
-
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -420,10 +416,10 @@ end
 function Utility:SaveConfig(fileName, data)
     local success, err = pcall(function()
         if not isfolder then return end
-        if not isfolder("NexusUI") then
-            makefolder("NexusUI")
+        if not isfolder("LapoLibrary") then
+            makefolder("LapoLibrary")
         end
-        writefile("NexusUI/" .. fileName .. ".json", HttpService:JSONEncode(data))
+        writefile("LapoLibrary/" .. fileName .. ".json", HttpService:JSONEncode(data))
     end)
     return success
 end
@@ -431,8 +427,8 @@ end
 function Utility:LoadConfig(fileName)
     local success, result = pcall(function()
         if not isfile then return nil end
-        if isfile("NexusUI/" .. fileName .. ".json") then
-            return HttpService:JSONDecode(readfile("NexusUI/" .. fileName .. ".json"))
+        if isfile("LapoLibrary/" .. fileName .. ".json") then
+            return HttpService:JSONDecode(readfile("LapoLibrary/" .. fileName .. ".json"))
         end
         return nil
     end)
@@ -467,7 +463,7 @@ function Library:CreateWindow(config)
     local self = setmetatable({}, Library)
     
     -- Configuration
-    self.Name = config.Name or "Nexus UI"
+    self.Name = config.Name or "Lapo Library"
     self.Size = config.Size or UDim2.new(0, 580, 0, 460)
     self.Position = config.Position or UDim2.new(0.5, 0, 0.5, 0)
     self.ThemeName = config.Theme or "Dark"
@@ -483,6 +479,15 @@ function Library:CreateWindow(config)
     self.Elements = {}
     self.Notifications = {}
     
+    -- Destroy existing UI with same name to prevent duplicates
+    local screenGui = CoreGui:FindFirstChild("LapoLibrary_Window")
+    if not screenGui and RunService:IsStudio() then
+        screenGui = LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("LapoLibrary_Window") or nil
+    end
+    if screenGui then
+        screenGui:Destroy()
+    end
+    
     -- Build UI
     self:_BuildUI()
     self:_SetupKeybind()
@@ -496,7 +501,7 @@ function Library:_BuildUI()
     
     -- ScreenGui
     self.ScreenGui = Utility:Create("ScreenGui", {
-        Name = "NexusUI_" .. HttpService:GenerateGUID(false):sub(1, 8),
+        Name = "LapoLibrary_Window",
         ResetOnSpawn = false,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
         Parent = RunService:IsStudio() and LocalPlayer:WaitForChild("PlayerGui") or CoreGui
@@ -1525,7 +1530,7 @@ function Library:_CreateSlider(section, config)
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0,
         ZIndex = 9,
-        Parent = slider.Fill
+        Parent = slider.Track
     })
     
     Utility:Create("UICorner", {
@@ -1580,6 +1585,11 @@ function Library:_CreateSlider(section, config)
             local percent = math.clamp((Mouse.X - slider.Track.AbsolutePosition.X) / slider.Track.AbsoluteSize.X, 0, 1)
             local value = slider.Min + (slider.Max - slider.Min) * percent
             slider:SetValue(value)
+            
+            -- Update knob position directly
+            Utility:Tween(slider.Knob, {
+                Position = UDim2.new(percent, 0, 0.5, 0)
+            }, 0, Enum.EasingStyle.Linear)
         end
     end)
     
@@ -1695,7 +1705,7 @@ function Library:_CreateDropdown(section, config)
         CanvasSize = UDim2.new(0, 0, 0, 0),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         Visible = false,
-        ZIndex = 10,
+        ZIndex = 100,
         Parent = dropdown.Container
     })
     
@@ -2168,13 +2178,13 @@ function Library:_CreateColorPicker(section, config)
     colorPicker.Panel = Utility:Create("Frame", {
         Name = "Panel",
         Size = UDim2.new(0, 200, 0, 0),
-        Position = UDim2.new(1, -205, 0, 0),
+        Position = UDim2.new(1, -205, 1, 5),
         BackgroundColor3 = theme.BgElevated,
         BorderSizePixel = 0,
         Visible = false,
         ClipsDescendants = true,
-        ZIndex = 10,
-        Parent = colorPicker.Container
+        ZIndex = 100,
+        Parent = section.Content
     })
     
     Utility:Create("UICorner", {
@@ -2185,21 +2195,23 @@ function Library:_CreateColorPicker(section, config)
     Utility:AddStroke(colorPicker.Panel, theme.Border, 1, 0.6)
     Utility:AddShadow(colorPicker.Panel, theme.Shadow, 15, 0.5)
     
-    -- RGB Sliders (simplified version)
+    -- RGB Sliders (with input boxes)
     local rgbSliders = {}
     local colors = {"R", "G", "B"}
+    local rgbValues = {R = 255, G = 255, B = 255}
     
     for i, color in ipairs(colors) do
         local sliderFrame = Utility:Create("Frame", {
-            Size = UDim2.new(1, -20, 0, 30),
-            Position = UDim2.new(0, 10, 0, 10 + (i-1) * 35),
+            Size = UDim2.new(1, -20, 0, 35),
+            Position = UDim2.new(0, 10, 0, 10 + (i-1) * 40),
             BackgroundTransparency = 1,
             ZIndex = 11,
             Parent = colorPicker.Panel
         })
         
         local label = Utility:Create("TextLabel", {
-            Size = UDim2.new(0, 15, 1, 0),
+            Size = UDim2.new(0, 15, 0, 15),
+            Position = UDim2.new(0, 0, 0, 0),
             BackgroundTransparency = 1,
             Text = color,
             TextColor3 = theme.TextPrimary,
@@ -2209,20 +2221,94 @@ function Library:_CreateColorPicker(section, config)
             Parent = sliderFrame
         })
         
-        local valueLabel = Utility:Create("TextLabel", {
-            Size = UDim2.new(0, 30, 1, 0),
-            Position = UDim2.new(1, -30, 0, 0),
-            BackgroundTransparency = 1,
-            Text = "255",
-            TextColor3 = theme.TextSecondary,
+        local inputBox = Utility:Create("TextBox", {
+            Size = UDim2.new(0, 40, 0, 18),
+            Position = UDim2.new(1, -40, 0, 0),
+            BackgroundColor3 = theme.BgSecondary,
+            BorderSizePixel = 0,
+            Text = tostring(rgbValues[color]),
+            TextColor3 = theme.TextPrimary,
             TextSize = theme.FontSizes.Small,
             Font = Enum.Font.Gotham,
-            TextXAlignment = Enum.TextXAlignment.Right,
             ZIndex = 12,
             Parent = sliderFrame
         })
         
-        rgbSliders[color] = {Frame = sliderFrame, ValueLabel = valueLabel}
+        Utility:Create("UICorner", {
+            CornerRadius = UDim.new(0, 3),
+            Parent = inputBox
+        })
+        
+        Utility:AddStroke(inputBox, theme.Border, 1, 0.7)
+        
+        local rgbTrack = Utility:Create("Frame", {
+            Size = UDim2.new(1, -55, 0, 5),
+            Position = UDim2.new(0, 20, 1, -13),
+            BackgroundColor3 = theme.BgSecondary,
+            BorderSizePixel = 0,
+            ZIndex = 11,
+            Parent = sliderFrame
+        })
+        
+        Utility:Create("UICorner", {
+            CornerRadius = UDim.new(1, 0),
+            Parent = rgbTrack
+        })
+        
+        local rgbFill = Utility:Create("Frame", {
+            Size = UDim2.new((rgbValues[color] / 255), 0, 1, 0),
+            BackgroundColor3 = color == "R" and Color3.fromRGB(255, 0, 0) or (color == "G" and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 255)),
+            BorderSizePixel = 0,
+            ZIndex = 12,
+            Parent = rgbTrack
+        })
+        
+        Utility:Create("UICorner", {
+            CornerRadius = UDim.new(1, 0),
+            Parent = rgbFill
+        })
+        
+        rgbSliders[color] = {Frame = sliderFrame, InputBox = inputBox, Fill = rgbFill, Track = rgbTrack}
+    end
+    
+    -- Function to update color from RGB inputs
+    local function updateColorFromRGB()
+        local r = math.clamp(tonumber(rgbSliders["R"].InputBox.Text) or 255, 0, 255)
+        local g = math.clamp(tonumber(rgbSliders["G"].InputBox.Text) or 255, 0, 255)
+        local b = math.clamp(tonumber(rgbSliders["B"].InputBox.Text) or 255, 0, 255)
+        
+        colorPicker:SetValue(Color3.fromRGB(r, g, b))
+    end
+    
+    -- Handle RGB input changes
+    for _, color in ipairs(colors) do
+        rgbSliders[color].InputBox.FocusLost:Connect(function()
+            local value = tonumber(rgbSliders[color].InputBox.Text) or 0
+            value = math.clamp(value, 0, 255)
+            rgbSliders[color].InputBox.Text = tostring(value)
+            rgbValues[color] = value
+            rgbSliders[color].Fill.Size = UDim2.new((value / 255), 0, 1, 0)
+            updateColorFromRGB()
+        end)
+        
+        rgbSliders[color].InputBox.Changed:Connect(function()
+            local value = tonumber(rgbSliders[color].InputBox.Text) or 0
+            if value >= 0 and value <= 255 then
+                rgbSliders[color].Fill.Size = UDim2.new((value / 255), 0, 1, 0)
+            end
+        end)
+        
+        -- Handle track clicks
+        rgbSliders[color].Track.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                local percent = math.clamp((Mouse.X - rgbSliders[color].Track.AbsolutePosition.X) / rgbSliders[color].Track.AbsoluteSize.X, 0, 1)
+                local value = math.floor(percent * 255)
+                rgbSliders[color].InputBox.Text = tostring(value)
+                rgbValues[color] = value
+                rgbSliders[color].Fill.Size = UDim2.new(percent, 0, 1, 0)
+                updateColorFromRGB()
+            end
+        end)
     end
     
     -- Toggle panel
@@ -2244,10 +2330,15 @@ function Library:_CreateColorPicker(section, config)
         colorPicker.Value = color
         colorPicker.Preview.BackgroundColor3 = color
         
-        -- Update RGB labels
-        rgbSliders["R"].ValueLabel.Text = tostring(math.floor(color.R * 255))
-        rgbSliders["G"].ValueLabel.Text = tostring(math.floor(color.G * 255))
-        rgbSliders["B"].ValueLabel.Text = tostring(math.floor(color.B * 255))
+        -- Update RGB inputs
+        rgbSliders["R"].InputBox.Text = tostring(math.floor(color.R * 255))
+        rgbSliders["G"].InputBox.Text = tostring(math.floor(color.G * 255))
+        rgbSliders["B"].InputBox.Text = tostring(math.floor(color.B * 255))
+        
+        -- Update RGB fills
+        rgbSliders["R"].Fill.Size = UDim2.new(color.R, 0, 1, 0)
+        rgbSliders["G"].Fill.Size = UDim2.new(color.G, 0, 1, 0)
+        rgbSliders["B"].Fill.Size = UDim2.new(color.B, 0, 1, 0)
         
         if colorPicker.Flag then
             Library.Flags[colorPicker.Flag] = color
